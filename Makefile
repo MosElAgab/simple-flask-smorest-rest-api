@@ -1,6 +1,7 @@
 # Default task
-.PHONY: help
+.PHONY: help check-venv
 help:
+	@echo "Note: ❌ Please activate the virtual environment first."
 	@echo "Available commands:"
 	@echo "  make run         - Run the Flask app"
 	@echo "  make test        - Run unit tests"
@@ -8,11 +9,6 @@ help:
 	@echo "  make format      - Auto-format code"
 	@echo "  make install     - Install dependencies"
 
-check-venv:
-	@if [ "$$(which python)" != "$$(pwd)/venv/bin/python" ]; then \
-		echo "❌ Please activate the virtual environment first (source venv/bin/activate)"; \
-		exit 1; \
-	fi
 run:
 	flask run
 
