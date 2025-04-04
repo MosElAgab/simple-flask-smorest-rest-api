@@ -8,6 +8,11 @@ help:
 	@echo "  make format      - Auto-format code"
 	@echo "  make install     - Install dependencies"
 
+check-venv:
+	@if [ "$$(which python)" != "$$(pwd)/venv/bin/python" ]; then \
+		echo "❌ Please activate the virtual environment first (source venv/bin/activate)"; \
+		exit 1; \
+	fi
 run:
 	flask run
 
