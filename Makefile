@@ -1,5 +1,5 @@
 # Default task
-.PHONY: help check-venv
+.PHONY: help run-app test lint format install
 help:
 	@echo "Note: ❌ Please activate the virtual environment first."
 	@echo "Available commands:"
@@ -9,7 +9,7 @@ help:
 	@echo "  make format      - Auto-format code"
 	@echo "  make install     - Install dependencies"
 
-run:
+run-app:
 	flask run
 
 test:
