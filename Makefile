@@ -1,5 +1,5 @@
 # Default task
-.PHONY: help build-app-container run-app-container run-app test lint format install
+.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req
 
 help:
 	@echo "  Note:            ❌ Please activate the virtual environment first."
@@ -10,7 +10,8 @@ help:
 	@echo "  make test                   - Run unit tests"
 	@echo "  make lint                   - Run linter to check code style"
 	@echo "  make format                 - Auto-format code using Black"
-	@echo "  make install                - Install dependencies from requirements.txt"
+	@echo "  make install-req            - Install dependencies from requirements.txt"
+	@echo "  make print-req              - Save current dependencies to requirements.txt"
 
 build-app-container:
 	docker build -t flask-somrest-rest-api .
@@ -30,5 +31,8 @@ lint:
 format:
 	black .
 
-install:
+install-req:
 	pip install -r requirements.txt
+
+print-req:
+	pip freeze > requirements.txt
