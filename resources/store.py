@@ -1,9 +1,10 @@
-import uuid
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 
-from db import stores
+from db import db
+from models import StoreModel
 from schema import StoreSchema, StoreUpdateSchema
 
 
@@ -15,26 +16,22 @@ blp = Blueprint("stores", __name__, description="Operations on stores")
 class StoreList(MethodView):
     @blp.response(200, StoreSchema(many=True))
     def get(self):
-        return stores.values()
+        stores = StoreModel.query.all()
+        return stores
 
     @blp.arguments(StoreSchema)
     @blp.response(201, StoreSchema)
     def post(self, store_data):
-        if "store_name" not in store_data:
-            abort(
-                400,
-                message="Bas request. Ensure 'store_name' is included"
-            )
-        for store in stores.values():
-            if store["store_name"] == store_data["store_name"]:
-                abort(
-                    400,
-                    message="Store already exists."
-                )
-        store_id = uuid.uuid4().hex
-        new_store = {**store_data, "store_id": store_id}
-        stores[store_id] = new_store
-        return new_store, 201
+        new_store = StoreModel(**store_data)
+        try:
+            db.session.add(new_store)
+            db.session.commit()
+        except IntegrityError as e:
+            abort(500, message="Database constraint violated: " + str(e.orig))
+        except SQLAlchemyError as e:
+            abort(500, message="Database Error: " + str(e.orig))
+
+        return new_store
 
 
 # /store/<store_id>
@@ -42,23 +39,26 @@ class StoreList(MethodView):
 class Store(MethodView):
     @blp.response(200, StoreSchema)
     def get(self, store_id):
-        try:
-            return stores[store_id]
-        except KeyError:
-            abort(404, "Store not found")
+        store = StoreModel.query.get_or_404(store_id, description="Store not Found")
+        return store
 
     def delete(self, store_id):
-        try:
-            del stores[store_id]
-            return {"message": "Store deleted"}, 200
-        except KeyError:
-            abort(404, "Store not found")
+        store = StoreModel.query.get_or_404(store_id)
+        db.session.delete(store)
+        db.session.commit()
+        return {"message": "Store deleted"}, 200
 
     @blp.arguments(StoreUpdateSchema)
     @blp.response(200, StoreSchema)
     def put(self, store_data, store_id):
+        store = StoreModel.query.get(store_id)
+        if store:
+            store.store_name = store_data["store_name"]
+        else:
+            store = StoreModel(store_id=store_id, **store_data)
+            db.session.add(store)
         try:
-            stores[store_id] |= store_data
-            return stores[store_id]
-        except KeyError:
-            abort(404, "Store not found")
+            db.session.commit()
+        except IntegrityError as e:
+                abort(500, message="Database constraint violated: " + str(e.orig))
+        return store
