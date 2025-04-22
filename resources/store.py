@@ -1,9 +1,11 @@
-import uuid
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 
+from db import db
 from db import stores
+from models import StoreModel
 from schema import StoreSchema, StoreUpdateSchema
 
 
@@ -15,26 +17,22 @@ blp = Blueprint("stores", __name__, description="Operations on stores")
 class StoreList(MethodView):
     @blp.response(200, StoreSchema(many=True))
     def get(self):
-        return stores.values()
+        stores = StoreModel.query.all()
+        return stores
 
     @blp.arguments(StoreSchema)
     @blp.response(201, StoreSchema)
     def post(self, store_data):
-        if "store_name" not in store_data:
-            abort(
-                400,
-                message="Bas request. Ensure 'store_name' is included"
-            )
-        for store in stores.values():
-            if store["store_name"] == store_data["store_name"]:
-                abort(
-                    400,
-                    message="Store already exists."
-                )
-        store_id = uuid.uuid4().hex
-        new_store = {**store_data, "store_id": store_id}
-        stores[store_id] = new_store
-        return new_store, 201
+        new_store = StoreModel(**store_data)
+        try:
+            db.session.add(new_store)
+            db.session.commit()
+        except IntegrityError as e:
+            abort(500, message="Database constraint violated: " + str(e.orig))
+        except SQLAlchemyError as e:
+            abort(500, message="Database Error: " + str(e.orig))
+
+        return new_store
 
 
 # /store/<store_id>

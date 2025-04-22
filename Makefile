@@ -17,7 +17,7 @@ build-app-container:
 	docker build -t flask-somrest-rest-api .
 
 run-app-container:
-	docker run -dp 5006:5000 -w /app -v "$(shell pwd):/app" flask-somrest-rest-api
+	docker run -dp 5007:5000 -w /app -v "$(shell pwd):/app" flask-somrest-rest-api
 
 run-app:
 	flask run
