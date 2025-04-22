@@ -3,7 +3,6 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
-from db import items, stores
 from models import ItemModel
 from schema import ItemSchema, ItemUpdateSchema
 
@@ -40,23 +39,26 @@ class ItemList(MethodView):
 class Store(MethodView):
     @blp.response(200, ItemSchema)
     def get(self, item_id):
-        try:
-            return items[item_id]
-        except KeyError:
-            abort(404, message="Item not found.")
+        item = ItemModel.query.get_or_404(item_id)
+        return item
 
     def delete(self, item_id):
-        try:
-            del items[item_id]
-            return {"message": "Item deleted."}
-        except KeyError:
-            abort(404, message="Item not found.")
+        item = ItemModel.query.get_or_404(item_id)
+        db.session.delete(item)
+        db.session.commit()
+        return {"message":"item deleted"}
+
 
     @blp.arguments(ItemUpdateSchema)
     @blp.response(200, ItemSchema)
     def put(self, item_data, item_id):
-        try:
-            items[item_id] |= item_data
-            return items[item_id]
-        except KeyError:
-            abort(404, "item not found")
+        item = ItemModel.query.get(item_id)
+        if item:
+            for field in ["item_name", "item_price", "store_id"]:
+                if field in item_data:
+                    setattr(item, field, item_data[field])
+        else:
+            item = ItemModel(item_id=item_id, **item_data)
+            db.session.add(item)
+        db.session.commit()
+        return item
