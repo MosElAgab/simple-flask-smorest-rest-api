@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from db import db
 from models import StoreModel
-from schema import StoreSchema, StoreUpdateSchema
+from schema import StoreSchema, StoreUpdateSchema, PlainStoreSchema
 
 
 blp = Blueprint("stores", __name__, description="Operations on stores")
@@ -14,7 +14,7 @@ blp = Blueprint("stores", __name__, description="Operations on stores")
 # /store
 @blp.route("/store")
 class StoreList(MethodView):
-    @blp.response(200, StoreSchema(many=True))
+    @blp.response(200, PlainStoreSchema(many=True))
     def get(self):
         stores = StoreModel.query.all()
         return stores
