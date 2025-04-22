@@ -1,9 +1,10 @@
-import uuid
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from sqlalchemy.exc import SQLAlchemyError
 
-
+from db import db
 from db import items, stores
+from models import ItemModel
 from schema import ItemSchema, ItemUpdateSchema
 
 
@@ -11,27 +12,27 @@ blp = Blueprint("items", __name__, description="Operations on items")
 
 
 # /item
+# FIXME: item or items
 @blp.route("/item")
 class ItemList(MethodView):
     @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return items.values()
+        items = ItemModel.query.all()
+        return items
+
     
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
     def post(self, item_data):
-        # # check valid store id
-        if item_data['store_id'] not in stores:
-            abort(404, message="Store not found.")
-        # ensure no duplicates
-        for item in items.values():
-            if item["item_name"] == item_data["item_name"] and item["store_id"] == item_data["store_id"]:
-                abort(400, message="Bad request, Item already exist.")
+        item = ItemModel(**item_data)
+        try:
+            db.session.add(item)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            abort(500, message="Database Error: " + str(e.orig))
+        return item
 
-        item_id = uuid.uuid4().hex
-        new_item = {**item_data, "item_id": item_id}
-        items[item_id] = new_item
-        return new_item, 200
 
 
 # /item/<item_id>

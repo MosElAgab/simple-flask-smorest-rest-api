@@ -4,7 +4,6 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 
 from db import db
-from db import stores
 from models import StoreModel
 from schema import StoreSchema, StoreUpdateSchema
 
