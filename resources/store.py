@@ -40,23 +40,26 @@ class StoreList(MethodView):
 class Store(MethodView):
     @blp.response(200, StoreSchema)
     def get(self, store_id):
-        try:
-            return stores[store_id]
-        except KeyError:
-            abort(404, "Store not found")
+        store = StoreModel.query.get_or_404(store_id, description="Store not Found")
+        return store
 
     def delete(self, store_id):
-        try:
-            del stores[store_id]
-            return {"message": "Store deleted"}, 200
-        except KeyError:
-            abort(404, "Store not found")
+        store = StoreModel.query.get_or_404(store_id)
+        db.session.delete(store)
+        db.session.commit()
+        return {"message": "Store deleted"}, 200
 
     @blp.arguments(StoreUpdateSchema)
     @blp.response(200, StoreSchema)
     def put(self, store_data, store_id):
+        store = StoreModel.query.get(store_id)
+        if store:
+            store.store_name = store_data["store_name"]
+        else:
+            store = StoreModel(store_id=store_id, **store_data)
+            db.session.add(store)
         try:
-            stores[store_id] |= store_data
-            return stores[store_id]
-        except KeyError:
-            abort(404, "Store not found")
+            db.session.commit()
+        except IntegrityError as e:
+                abort(500, message="Database constraint violated: " + str(e.orig))
+        return store
