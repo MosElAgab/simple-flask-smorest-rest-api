@@ -3,8 +3,8 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
-from models import TagModel, StoreModel
-from schema import TagSchema, PlainTagSchema
+from models import TagModel, StoreModel, ItemModel
+from schema import TagSchema, PlainTagSchema, ItemSchema, TagAndItemSchema
 
 
 blp = Blueprint("tags", __name__, description="Operations on tags.")
@@ -46,3 +46,36 @@ class Tag(MethodView):
     def get(self, tag_id):
         tag =TagModel.query.get_or_404(tag_id)
         return tag
+
+
+@blp.route("/item/<string:item_id>/tag/<string:tag_id>")
+class ItemTag(MethodView):
+    # TODO: what if the tag attached is not in the same store as the model
+    @blp.response(201, ItemSchema)
+    def post(self, item_id, tag_id):
+        item = ItemModel.query.get_or_404(item_id)
+        tag = TagModel.query.get_or_404(tag_id)
+
+        item.tags.append(tag)
+        try:
+            db.session.commit()
+        except SQLAlchemyError as e:
+            abort(500, message="Database Error: " + str(e))
+        return item
+    
+    @blp.response(200, TagAndItemSchema)
+    def delete(sefl, item_id, tag_id):
+        item = ItemModel.query.get_or_404(item_id)
+        tag = TagModel.query.get_or_404(tag_id)
+
+        try:
+            item.tags.remove(tag)
+            db.session.commit()
+        except ValueError as e:
+            abort(500, message="Database Error: " + str(e))
+        except SQLAlchemyError as e:
+            abort(500, message="Database Error: " + str(e))
+        
+        message = "Tag was unlinked from item successfully"
+        
+        return {"message": message, "tag": tag, "item": item}
