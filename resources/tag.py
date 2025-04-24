@@ -10,7 +10,7 @@ from schema import TagSchema, PlainTagSchema, ItemSchema, TagAndItemSchema
 blp = Blueprint("tags", __name__, description="Operations on tags.")
 
 
-@blp.route("/store/<string:store_id>/tag")
+@blp.route("/store/<int:store_id>/tag")
 class TagsInStore(MethodView):
     @blp.response(200, TagSchema(many=True))
     def get(self, store_id):
@@ -40,7 +40,7 @@ class TagList(MethodView):
         return tags
 
 
-@blp.route("/tag/<string:tag_id>")
+@blp.route("/tag/<int:tag_id>")
 class Tag(MethodView):
     @blp.response(200, PlainTagSchema)
     def get(self, tag_id):
@@ -70,7 +70,7 @@ class Tag(MethodView):
         )
 
 
-@blp.route("/item/<string:item_id>/tag/<string:tag_id>")
+@blp.route("/item/<int:item_id>/tag/<int:tag_id>")
 class ItemTag(MethodView):
     # TODO: what if the tag attached is not in the same store as the model
     @blp.response(201, ItemSchema)
