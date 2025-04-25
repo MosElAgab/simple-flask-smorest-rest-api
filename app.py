@@ -2,6 +2,8 @@ import os
 
 from flask import Flask
 from flask_smorest import Api
+from flask_jwt_extended import JWTManager
+# import secrets
 
 from db import db
 import models
@@ -24,21 +26,25 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
-    @app.route("/")
-    def home():
-        return "Hello to Simple-Flask-Smorest-REST-API"
     
     db.init_app(app)
 
     api = Api(app)
 
+    # how to normally produce a secret key. it should be store it in .env
+    # secret_key = secrets.SystemRandom().getrandbits(128)
+    app.config["JWT_SECRET_KEY"] = "mostafa"
+    jwt = JWTManager(app)
+
     with app.app_context():
         db.create_all()
-
 
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(TagBlueprint)
+
+    @app.route("/")
+    def home():
+        return "Hello to Simple-Flask-Smorest-REST-API"
 
     return app
