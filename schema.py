@@ -38,7 +38,6 @@ class ItemSchema(PlainItemSchema):
 
 
 class TagSchema(PlainTagSchema):
-    # store_id = fields.Int(load_only=True)
     store = fields.Nested(PlainStoreSchema(), dump_only=True)
     items = fields.List(fields.Nested(PlainItemSchema()), dump_only=True)
 
@@ -47,3 +46,9 @@ class TagAndItemSchema(Schema):
     message = fields.Str(dump_only=True)
     item = fields.Nested(PlainItemSchema(), dump_only=True)
     tag = fields.Nested(PlainTagSchema(), dump_only=True)
+
+
+class UserSchema(Schema):
+    user_id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+    password = fields.Str(required=True)
