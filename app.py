@@ -5,6 +5,7 @@ from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 # import secrets
 
+from blocklist import BLOCKLIST
 from db import db
 import models
 
@@ -36,6 +37,15 @@ def create_app(db_url=None):
     # secret_key = secrets.SystemRandom().getrandbits(128)
     app.config["JWT_SECRET_KEY"] = "mostafa"
     jwt = JWTManager(app)
+    
+    @jwt.additional_claims_loader
+    def is_admin_claim(identity):
+        user = models.UserModel.query.get_or_404(identity)
+        return {"is_admin": user.is_admin}
+    
+    @jwt.token_in_blocklist_loader
+    def check_if_token_terminated(jwt_header, jwt_payload):
+        return jwt_payload["jti"] in BLOCKLIST
     
     @jwt.additional_claims_loader
     def is_admin_claim(identity):
