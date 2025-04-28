@@ -44,7 +44,8 @@ def create_app(db_url=None):
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(TagBlueprint)
     api.register_blueprint(UserBlueprint)
-
+    
+    
     @app.route("/")
     def home():
         return "Hello to Simple-Flask-Smorest-REST-API"
