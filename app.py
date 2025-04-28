@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 # import secrets
@@ -36,7 +36,12 @@ def create_app(db_url=None):
     # secret_key = secrets.SystemRandom().getrandbits(128)
     app.config["JWT_SECRET_KEY"] = "mostafa"
     jwt = JWTManager(app)
-
+    
+    @jwt.additional_claims_loader
+    def is_admin_claim(identity):
+        user = models.UserModel.query.get_or_404(identity)
+        return {"is_admin": user.is_admin}
+    
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
         return (
