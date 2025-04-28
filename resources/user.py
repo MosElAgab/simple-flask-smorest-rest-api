@@ -30,6 +30,25 @@ class UserRegister(MethodView):
         return {"message": "User created successfully."}, 201
 
 
+@blp.route("/register-admin")
+class AdminRegister(MethodView):
+    @blp.arguments(UserSchema)
+    @blp.response(201, UserSchema)
+    def post(self, admin_data):
+        if UserModel.query.filter(
+            UserModel.username == admin_data["username"]
+        ).first():
+            abort(409, message="A user with the given username already exists.")
+        
+        admin = UserModel(username=admin_data["username"],
+            password=pbkdf2_sha256.hash(admin_data["password"]), 
+            is_admin=True)
+
+        db.session.add(admin)
+        db.session.commit()
+        return admin
+
+
 @blp.route("/login")
 class UserLogin(MethodView):
     @blp.arguments(UserSchema)
