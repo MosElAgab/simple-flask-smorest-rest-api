@@ -6,5 +6,5 @@ class UserModel(db.Model):
 
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
+    password = db.Column(db.String(256), unique=False, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)

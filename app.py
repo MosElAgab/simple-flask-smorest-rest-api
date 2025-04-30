@@ -3,6 +3,7 @@ import os
 from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 # import secrets
 
 from blocklist import BLOCKLIST
@@ -80,8 +81,7 @@ def create_app(db_url=None):
             401,
         )
 
-    with app.app_context():
-        db.create_all()
+    migrate = Migrate(app, db)
 
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(ItemBlueprint)
