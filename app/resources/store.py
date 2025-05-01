@@ -3,9 +3,9 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from flask_jwt_extended import jwt_required
 
-from db import db
-from models import StoreModel
-from schema import StoreSchema, StoreUpdateSchema, PlainStoreSchema
+from app.db import db
+from app.models import StoreModel
+from app.schema import StoreSchema, StoreUpdateSchema, PlainStoreSchema
 
 
 blp = Blueprint("stores", __name__, description="Operations on stores")

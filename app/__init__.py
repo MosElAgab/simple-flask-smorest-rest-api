@@ -6,15 +6,15 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 # import secrets
 
-from config import config_mapping
-from blocklist import BLOCKLIST
-from db import db
-import models
+from .config import config_mapping
+from .blocklist import BLOCKLIST
+from .db import db
+import app.models
 
-from resources.store import blp as StoreBlueprint
-from resources.item import blp as ItemBlueprint
-from resources.tag import blp as TagBlueprint
-from resources.user import blp as UserBlueprint
+from .resources.store import blp as StoreBlueprint
+from .resources.item import blp as ItemBlueprint
+from .resources.tag import blp as TagBlueprint
+from .resources.user import blp as UserBlueprint
 
 def create_app(config_name:str = None, db_url: str =None):
 
