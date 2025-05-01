@@ -20,11 +20,12 @@ def create_app(config_name:str = None, db_url: str =None):
 
     # check config_name -> or env variable FLAS_ENV or uses default value development
     # TODO: test me
-    config_name = config_name or os.getenv("FLASK_ENV", "development")
     app = Flask(__name__)
 
 
+
     # load configs
+    config_name = config_name or os.getenv("FLASK_ENV", "development")
     cfg = config_mapping.get(config_name)
     if cfg is None:
         raise ValueError(f"Unkown config: {config_name}")
@@ -84,7 +85,9 @@ def create_app(config_name:str = None, db_url: str =None):
             401,
         )
 
-    migrate = Migrate(app, db)
+    # Migration
+    if not app.config.get("TESTING"):
+        migrate = Migrate(app, db)
 
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(ItemBlueprint)
