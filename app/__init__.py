@@ -20,7 +20,7 @@ def create_app(config_name:str = None, db_url: str =None):
 
     # check config_name -> or env variable FLAS_ENV or uses default value development
     # TODO: test me
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
 
 
 
@@ -30,6 +30,9 @@ def create_app(config_name:str = None, db_url: str =None):
     if cfg is None:
         raise ValueError(f"Unknown config: {config_name}")
     app.config.from_object(cfg)
+
+    # for overrides instance/config.py
+    app.config.from_pyfile("config.py", silent=True)
 
     # 
     if db_url:
@@ -80,7 +83,7 @@ def create_app(config_name:str = None, db_url: str =None):
             401,
         )
 
-    # Migration
+    # Migration, only wire up when not testing
     if not app.config.get("TESTING"):
         migrate = Migrate(app, db)
 
