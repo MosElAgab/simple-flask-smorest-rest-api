@@ -1,4 +1,5 @@
 # simple-flask-smorest-rest-api
-- future improvement: add Admin previlage for dev only endpoints
+- future development: testing
 - TODO: configure proper JWT_access token before debloyment
-- future improvement: add logout endpoint
+- future develpment: refresh jwt tokens
+- furture develpment: consider proper blocklist
