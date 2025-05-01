@@ -3,10 +3,10 @@ from flask_smorest import Blueprint, abort
 from passlib.hash import pbkdf2_sha256
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 
-from app.blocklist import BLOCKLIST
-from app.db import db
-from app.schema import UserSchema
-from app.models import UserModel
+from ..blocklist import BLOCKLIST
+from ..db import db
+from ..schema import UserSchema
+from ..models import UserModel
 
 
 blp = Blueprint("Users", __name__, description="Operations on users")

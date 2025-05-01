@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 from .config import config_mapping
 from .blocklist import BLOCKLIST
 from .db import db
-import app.models
+from . import models
 
 from .resources.store import blp as StoreBlueprint
 from .resources.item import blp as ItemBlueprint
