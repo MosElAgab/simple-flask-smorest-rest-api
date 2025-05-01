@@ -1,5 +1,5 @@
 import os
-
+import secrets
 
 class BaseConfig:
     PROPOGATE_EXCEPTIONS = True
@@ -10,7 +10,7 @@ class BaseConfig:
     OPENAPI_SWAGGER_UI_PATH = "/swagger-ui"
     OPENAPI_SWAGGER_UI_URL = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "mostafa")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", str(secrets.SystemRandom().getrandbits(128)))
 
 
 class DevelopmentConfig(BaseConfig):
@@ -24,6 +24,7 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
+    PROPOGATE_EXCEPTIONS = False
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///data.db")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
