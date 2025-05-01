@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 # import secrets
 
+from config import config_mapping
 from blocklist import BLOCKLIST
 from db import db
 import models
@@ -15,28 +16,30 @@ from resources.item import blp as ItemBlueprint
 from resources.tag import blp as TagBlueprint
 from resources.user import blp as UserBlueprint
 
-def create_app(db_url=None):
+def create_app(config_name:str = None, db_url: str =None):
+
+    # check config_name -> or env variable FLAS_ENV or uses default value development
+    # TODO: test me
+    config_name = config_name or os.getenv("FLASK_ENV", "development")
     app = Flask(__name__)
 
 
-    app.config["PROPOGATE_EXCEPTIONS"] = True
-    app.config["API_TITLE"] = "simple-flask-somorest-api"
-    app.config["API_VERSION"] = "v1"
-    app.config["OPENAPI_VERSION"] = "3.0.3"
-    app.config["OPENAPI_URL_PREFIX"] = "/"
-    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
-    app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    # load configs
+    cfg = config_mapping.get(config_name)
+    if cfg is None:
+        raise ValueError(f"Unkown config: {config_name}")
+    app.config.from_object(cfg)
 
-    
+    # 
+    if db_url:
+        app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+
+
     db.init_app(app)
 
     api = Api(app)
 
     # how to normally produce a secret key. it should be store it in .env
-    # secret_key = secrets.SystemRandom().getrandbits(128)
-    app.config["JWT_SECRET_KEY"] = "mostafa"
     jwt = JWTManager(app)
     
     @jwt.additional_claims_loader
