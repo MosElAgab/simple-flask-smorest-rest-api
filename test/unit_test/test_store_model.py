@@ -1,6 +1,7 @@
-from app.models import StoreModel
 import pytest
 from sqlalchemy.exc import IntegrityError
+
+from app.models import StoreModel
 
 
 def test_constructor():
@@ -33,16 +34,12 @@ def test_crud_operation(session):
 
     retrieved_store.store_name = "my_new_store"
     session.commit()
-    updated_store = StoreModel.query.filter_by(
-        store_id=1
-    ).first()
+    updated_store = StoreModel.query.filter_by(store_id=1).first()
     assert updated_store.store_name == "my_new_store"
 
     session.delete(updated_store)
     session.commit()
-    deleted_store = StoreModel.query.filter_by(
-        store_id=1
-    ).first()
+    deleted_store = StoreModel.query.filter_by(store_id=1).first()
     assert deleted_store is None
 
 
