@@ -16,11 +16,9 @@ from .resources.item import blp as ItemBlueprint
 from .resources.tag import blp as TagBlueprint
 from .resources.user import blp as UserBlueprint
 
-def create_app(config_name:str = None, db_url: str =None):
 
-    # check config_name -> or env variable FLAS_ENV or uses default value development
-    # TODO: test me
-    
+def create_app(config_name: str = None, db_url: str = None):
+
     app = Flask(__name__, instance_relative_config=True)
 
     # load configs
@@ -33,11 +31,10 @@ def create_app(config_name:str = None, db_url: str =None):
     # for overrides instance/config.py
     app.config.from_pyfile("config.py", silent=True)
 
-    # 
+    # for db_url overrides
     db_url = db_url or os.getenv("DATABASE_URL")
     if db_url:
         app.config["SQLALCHEMY_DATABASE_URI"] = db_url
-
 
     db.init_app(app)
 
@@ -45,16 +42,16 @@ def create_app(config_name:str = None, db_url: str =None):
 
     # how to normally produce a secret key. it should be store it in .env
     jwt = JWTManager(app)
-    
+
     @jwt.additional_claims_loader
     def is_admin_claim(identity):
         user = models.UserModel.query.get_or_404(identity)
         return {"is_admin": user.is_admin}
-    
+
     @jwt.token_in_blocklist_loader
     def check_if_token_terminated(jwt_header, jwt_payload):
         return jwt_payload["jti"] in BLOCKLIST
-    
+
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
         return (
@@ -85,14 +82,14 @@ def create_app(config_name:str = None, db_url: str =None):
 
     # Migration, only wire up when not testing
     if not app.config.get("TESTING"):
-        migrate = Migrate(app, db)
+        migrate = Migrate()
+        migrate.init_app(app, db)
 
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(TagBlueprint)
     api.register_blueprint(UserBlueprint)
-    
-    
+
     @app.route("/")
     def home():
         return "Hello to Simple-Flask-Smorest-REST-API"

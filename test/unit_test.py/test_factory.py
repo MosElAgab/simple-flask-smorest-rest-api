@@ -49,7 +49,7 @@ def test_create_app_loads_configs_using_config_name(config_name):
         "env, expected_db_uri",
         [
             ("development", "sqlite:///dev-data.db"),
-            ("testing", "sqlite:///:memory"),
+            ("testing", "sqlite:///:memory:"),
             ("production", "sqlite:///data.db")
         ]
 )

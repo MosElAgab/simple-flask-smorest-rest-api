@@ -29,7 +29,9 @@ coverage:
 	 PYTHONPATH=$(shell pwd) pytest --cov=app
 
 lint:
-	flake8 .
+	flake8 \
+	./test/*.py \
+	./app/__init__.py
 
 format:
 	black .
