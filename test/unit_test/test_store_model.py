@@ -11,6 +11,7 @@ def test_constructor():
     THEN the instance should have the correct `store_name`
     """
     store = StoreModel(store_name="Fake Shop")
+    assert isinstance(store, StoreModel)
     assert store.store_name == "Fake Shop"
 
 
@@ -34,7 +35,9 @@ def test_crud_operation(session):
 
     retrieved_store.store_name = "my_new_store"
     session.commit()
-    updated_store = StoreModel.query.filter_by(store_id=1).first()
+    updated_store = StoreModel.query.filter_by(
+        store_id=retrieved_store.store_id
+    ).first()
     assert updated_store.store_name == "my_new_store"
 
     session.delete(updated_store)
@@ -43,13 +46,14 @@ def test_crud_operation(session):
     assert deleted_store is None
 
 
-def test_store_name_uniqueness(session):
-    store_name = "Music"
+@pytest.mark.parametrize("store_name", ["Music", "Books", "Games"])
+def test_store_name_uniqueness(session, store_name):
     store_1 = StoreModel(store_name=store_name)
     store_2 = StoreModel(store_name=store_name)
 
     session.add(store_1)
     session.commit()
+    assert store_1.store_id is not None
 
     session.add(store_2)
     with pytest.raises(IntegrityError):
