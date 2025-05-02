@@ -20,9 +20,8 @@ def create_app(config_name:str = None, db_url: str =None):
 
     # check config_name -> or env variable FLAS_ENV or uses default value development
     # TODO: test me
+    
     app = Flask(__name__, instance_relative_config=True)
-
-
 
     # load configs
     config_name = config_name or os.getenv("FLASK_ENV", "development")
@@ -35,6 +34,7 @@ def create_app(config_name:str = None, db_url: str =None):
     app.config.from_pyfile("config.py", silent=True)
 
     # 
+    db_url = db_url or os.getenv("DATABASE_URL")
     if db_url:
         app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 

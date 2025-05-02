@@ -2,7 +2,7 @@ import os
 import secrets
 
 class BaseConfig:
-    PROPOGATE_EXCEPTIONS = True
+    PROPAGATE_EXCEPTIONS = True
     API_TITLE = "simple-flask-somorest-api"
     API_VERSION = "v1"
     OPENAPI_VERSION = "3.0.3"
@@ -15,7 +15,7 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///dev-data.db")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///dev-data.db"
 
 
 class TestingConfig(BaseConfig):
@@ -26,7 +26,7 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     PROPOGATE_EXCEPTIONS = False
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///data.db")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///data.db"
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
 
