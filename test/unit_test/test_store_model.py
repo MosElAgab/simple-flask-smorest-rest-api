@@ -23,9 +23,9 @@ def test_crud_operation(session):
     """
     store_data = {"store_name": "my_store"}
     store = StoreModel(**store_data)
-
     session.add(store)
     session.commit()
+
     assert store.store_id is not None
 
     retrieved_store = StoreModel.query.filter(
@@ -33,6 +33,7 @@ def test_crud_operation(session):
     ).first()
     assert retrieved_store.store_id == store.store_id
 
+    # Update
     retrieved_store.store_name = "my_new_store"
     session.commit()
     updated_store = StoreModel.query.filter_by(
@@ -40,6 +41,7 @@ def test_crud_operation(session):
     ).first()
     assert updated_store.store_name == "my_new_store"
 
+    # Delete
     session.delete(updated_store)
     session.commit()
     deleted_store = StoreModel.query.filter_by(store_id=1).first()

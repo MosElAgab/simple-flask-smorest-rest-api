@@ -59,7 +59,9 @@ def test_item_requires_store(session):
     WHEN it's added to the session
     THEN an IntegrityError should be raised
     """
-    item = ItemModel(item_name="Keyboard", item_price=199.99, store_id=99999)  # Invalid FK
+    item = ItemModel(
+        item_name="Keyboard", item_price=199.99, store_id=99999
+    )  # Invalid FK
     session.add(item)
     with pytest.raises(IntegrityError):
         session.commit()
