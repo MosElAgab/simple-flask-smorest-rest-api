@@ -1,5 +1,5 @@
 # Default task
-.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req
+.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage
 
 help:
 	@echo "  Note:            ❌ Please activate the virtual environment first."
@@ -24,6 +24,9 @@ run-app:
 
 test:
 	 PYTHONPATH=$(shell pwd) pytest -v
+
+coverage:
+	 PYTHONPATH=$(shell pwd) pytest --cov=app
 
 lint:
 	flake8 .
