@@ -16,3 +16,11 @@ def app():
 @pytest.fixture()
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture()
+def session(app):
+    "yeilds a fress db seasson for each test"
+    with app.app_context():
+        yield db.session
+        db.session.remove()

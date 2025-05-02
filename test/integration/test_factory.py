@@ -5,9 +5,9 @@ from app.config import config_mapping
 
 def test_invalid_config_name_raises_value_error():
     """
-    Given create_app function
-    When invalid config_name is given
-    Then ensure it raises value error
+    GIVEN create_app function
+    WHEN invalid config_name is given
+    THEN ensure it raises value error
     """
     with pytest.raises(ValueError):
         create_app("invalid_config_name")
