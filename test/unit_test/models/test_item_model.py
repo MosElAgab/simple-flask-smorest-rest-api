@@ -1,7 +1,7 @@
 from app.models import ItemModel
 
 
-def test_item_constructor():
+def test_constructor():
     """
     GIVEN an ItemModel with required fields
     WHEN an instance is created
