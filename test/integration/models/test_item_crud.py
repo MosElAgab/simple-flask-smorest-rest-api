@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.models import ItemModel, StoreModel
 
+
 def test_item_crud_operations(session):
     """
     GIVEN a StoreModel and an ItemModel
@@ -52,6 +53,7 @@ def test_item_requires_store(session):
     with pytest.raises(IntegrityError):
         session.commit()
 
+
 def test_item_requires_fields(session):
     item = ItemModel(item_price=19.99, store_id=1)  # Missing item_name
     session.add(item)
@@ -90,6 +92,7 @@ def test_duplicate_item_name_in_same_store_not_allowed(session):
     session.add(item2)
     with pytest.raises(IntegrityError):
         session.commit()
+
 
 def test_same_item_name_different_stores(session):
     store1 = StoreModel(store_name="Store A")

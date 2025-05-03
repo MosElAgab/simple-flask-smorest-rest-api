@@ -31,7 +31,7 @@ coverage:
 lint:
 	flake8 \
 	./test/*.py \
-	./test/unit_test/*.py \
+	./test/unit_test/models/*.py \
 	./test/integration/*.py \
 	./app/__init__.py \
 	./app/models/store.py
