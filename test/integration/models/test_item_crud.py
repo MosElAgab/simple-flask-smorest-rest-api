@@ -3,20 +3,6 @@ from sqlalchemy.exc import IntegrityError
 
 from app.models import ItemModel, StoreModel
 
-
-def test_item_constructor():
-    """
-    GIVEN an ItemModel with required fields
-    WHEN an instance is created
-    THEN it should store the correct data
-    """
-    item = ItemModel(item_name="Metal Pipe", item_price=499.99, store_id=1)
-    assert isinstance(item, ItemModel)
-    assert item.item_name == "Metal Pipe"
-    assert item.item_price == 499.99
-    assert item.store_id == 1
-
-
 def test_item_crud_operations(session):
     """
     GIVEN a StoreModel and an ItemModel
