@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from app.models import StoreModel, ItemModel
+from app.models import StoreModel, ItemModel, TagModel
 
 
 def test_crud_operation(session):
@@ -88,3 +88,31 @@ def test_store_with_no_items(session):
     session.commit()
 
     assert store.items.count() == 0
+
+
+# test store tags relationship
+def test_store_tags_relationship(session):
+    """
+    GIVEN a StoreModel with multiple TagModel instances
+    WHEN the tags are associated with the store
+    THEN store.tags should return all related TagModel instances
+    """
+    store = StoreModel(store_name="Costco")
+    session.add(store)
+    session.commit()
+
+    tag1 = TagModel(tag_name="Drinks", store_id=store.store_id)
+    tag2 = TagModel(tag_name="Clothes", store_id=store.store_id)
+    tag3 = TagModel(tag_name="Summer", store_id=store.store_id)
+
+    session.add_all([tag1, tag2, tag3])
+    session.commit()
+
+    # print(store.tags.all()[0].tag_name)
+    # assert False
+    assert store.tags.count() == 3
+    tag_names = [tag.tag_name for tag in store.tags.all()]
+    assert set(tag_names) == {"Drinks", "Clothes", "Summer"}
+
+# test store deletion cascade to tags 
+# test store with no tags
