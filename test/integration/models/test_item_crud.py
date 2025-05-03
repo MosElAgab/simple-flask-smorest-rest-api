@@ -69,3 +69,38 @@ def test_item_store_relationship_link(session):
     session.commit()
 
     assert item.store.store_name == store.store_name
+
+
+def test_duplicate_item_name_in_same_store_not_allowed(session):
+    """
+    GIVEN two ItemModel instances with the same name in the same store
+    WHEN both are added to the session
+    THEN an IntegrityError should be raised due to the unique constraint
+    """
+    store = StoreModel(store_name="Tool Shop")
+    session.add(store)
+    session.commit()
+
+    item1 = ItemModel(item_name="Hammer", item_price=15.99, store_id=store.store_id)
+    item2 = ItemModel(item_name="Hammer", item_price=17.99, store_id=store.store_id)
+
+    session.add(item1)
+    session.commit()
+
+    session.add(item2)
+    with pytest.raises(IntegrityError):
+        session.commit()
+
+def test_same_item_name_different_stores(session):
+    store1 = StoreModel(store_name="Store A")
+    store2 = StoreModel(store_name="Store B")
+    session.add_all([store1, store2])
+    session.commit()
+
+    item1 = ItemModel(item_name="AK 47", item_price=5.99, store_id=store1.store_id)
+    item2 = ItemModel(item_name="AK 47", item_price=6.49, store_id=store2.store_id)
+    session.add_all([item1, item2])
+    session.commit()
+
+    assert item1.item_name == item2.item_name
+    assert item1.store_id != item2.store_id

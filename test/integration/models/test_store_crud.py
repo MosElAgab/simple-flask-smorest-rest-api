@@ -80,3 +80,11 @@ def test_store_deletion_cascades_to_items(session):
     session.commit()
 
     assert session.query(ItemModel).filter_by(store_id=store.store_id).count() == 0
+
+
+def test_store_with_no_items(session):
+    store = StoreModel(store_name="Empty Store")
+    session.add(store)
+    session.commit()
+
+    assert store.items.count() == 0
