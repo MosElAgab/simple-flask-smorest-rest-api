@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from app.models import StoreModel
+from app.models import StoreModel, ItemModel
 
 
 def test_crud_operation(session):
@@ -49,3 +49,34 @@ def test_store_name_uniqueness(session, store_name):
     session.add(store_2)
     with pytest.raises(IntegrityError):
         session.commit()
+
+
+def test_store_item_relationship_link(session):
+    store = StoreModel(store_name="Tesco")
+    session.add(store)
+    session.commit()
+
+    item_1 = ItemModel(item_name="Milk", item_price=0.99, store_id=store.store_id)
+    item_2 = ItemModel(item_name="Cheese", item_price=1.99, store_id=store.store_id)
+    item_3 = ItemModel(item_name="Bread", item_price=1.49, store_id=store.store_id)
+    items = [item_1, item_2, item_3]
+
+    session.add_all(items)
+    session.commit()
+
+    assert store.items.count() == 3
+
+
+def test_store_deletion_cascades_to_items(session):
+    store = StoreModel(store_name="Cascade Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Mouse", item_price=49.99, store_id=store.store_id)
+    session.add(item)
+    session.commit()
+
+    session.delete(store)
+    session.commit()
+
+    assert session.query(ItemModel).filter_by(store_id=store.store_id).count() == 0

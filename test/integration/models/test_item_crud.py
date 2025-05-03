@@ -51,3 +51,21 @@ def test_item_requires_store(session):
     session.add(item)
     with pytest.raises(IntegrityError):
         session.commit()
+
+def test_item_requires_fields(session):
+    item = ItemModel(item_price=19.99, store_id=1)  # Missing item_name
+    session.add(item)
+    with pytest.raises(IntegrityError):
+        session.commit()
+
+
+def test_item_store_relationship_link(session):
+    store = StoreModel(store_name="My Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Milk", item_price=0.99, store_id=store.store_id)
+    session.add(item)
+    session.commit()
+
+    assert item.store.store_name == store.store_name
