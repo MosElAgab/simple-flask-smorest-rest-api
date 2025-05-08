@@ -23,10 +23,10 @@ run-app:
 	flask run
 
 test:
-	 PYTHONPATH=$(shell pwd) pytest -v
+	PYTHONPATH=$(shell pwd) pytest -v
 
 coverage:
-	 PYTHONPATH=$(shell pwd) pytest --cov=app
+	PYTHONPATH=$(shell pwd) pytest --cov=app
 
 lint:
 	flake8 \

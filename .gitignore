@@ -176,3 +176,6 @@ cython_debug/
 
 # 
 test.md
+
+# 
+/.vscode
