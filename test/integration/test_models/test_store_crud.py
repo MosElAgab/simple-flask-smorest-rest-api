@@ -31,9 +31,10 @@ def test_crud_operation(session):
     assert updated_store.store_name == "my_new_store"
 
     # Delete
+    store_id = updated_store.store_id
     session.delete(updated_store)
     session.commit()
-    deleted_store = StoreModel.query.filter_by(store_id=1).first()
+    deleted_store = StoreModel.query.filter_by(store_id=store_id).first()
     assert deleted_store is None
 
 
@@ -65,6 +66,7 @@ def test_store_item_relationship_link(session):
     session.commit()
 
     assert store.items.count() == 3
+    assert set([item.item_name for item in store.items]) == {"Milk", "Cheese", "Bread"}
 
 
 def test_store_deletion_cascades_to_items(session):
