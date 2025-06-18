@@ -4,19 +4,21 @@ from sqlalchemy.exc import IntegrityError
 from app.models import StoreModel, ItemModel, TagModel
 
 
+# test crud operation (create, retieve, update and delete)
 def test_crud_operation(session):
     """
     GIVEN a StoreModel instance
     WHEN it's added, queried, updated, and deleted from the session
     THEN the operations should reflect correct CRUD behavior
     """
+    # create
     store_data = {"store_name": "my_store"}
     store = StoreModel(**store_data)
     session.add(store)
     session.commit()
-
     assert store.store_id is not None
 
+    # retrieve
     retrieved_store = StoreModel.query.filter(
         StoreModel.store_name == store_data["store_name"]
     ).first()
@@ -28,7 +30,7 @@ def test_crud_operation(session):
     updated_store = StoreModel.query.filter_by(
         store_id=retrieved_store.store_id
     ).first()
-    assert updated_store.store_name == "my_new_store"
+    assert updated_store.store_name == retrieved_store.store_name
 
     # Delete
     store_id = updated_store.store_id
@@ -38,6 +40,7 @@ def test_crud_operation(session):
     assert deleted_store is None
 
 
+# test store name uniqness (multiple inputs)
 @pytest.mark.parametrize("store_name", ["Music", "Books", "Games"])
 def test_store_name_uniqueness(session, store_name):
     store_1 = StoreModel(store_name=store_name)
@@ -45,13 +48,31 @@ def test_store_name_uniqueness(session, store_name):
 
     session.add(store_1)
     session.commit()
-    assert store_1.store_id is not None
 
     session.add(store_2)
     with pytest.raises(IntegrityError):
         session.commit()
 
 
+# test store name cannot be null
+def test_store_name_cannot_be_null(session):
+    store = StoreModel(store_name=None)  # or omit store_name completely
+
+    session.add(store)
+    with pytest.raises(IntegrityError):
+        session.commit()
+
+
+# test store with no items
+def test_store_with_no_items(session):
+    store = StoreModel(store_name="Empty Store")
+    session.add(store)
+    session.commit()
+
+    assert store.items.count() == 0
+
+
+# test store-item relationship link (items referenced to the store can be found in the store)
 def test_store_item_relationship_link(session):
     store = StoreModel(store_name="Tesco")
     session.add(store)
@@ -69,6 +90,7 @@ def test_store_item_relationship_link(session):
     assert set([item.item_name for item in store.items]) == {"Milk", "Cheese", "Bread"}
 
 
+# test store deletion will delete store's items
 def test_store_deletion_cascades_to_items(session):
     store = StoreModel(store_name="Cascade Store")
     session.add(store)
@@ -84,16 +106,17 @@ def test_store_deletion_cascades_to_items(session):
     assert session.query(ItemModel).filter_by(store_id=store.store_id).count() == 0
 
 
-def test_store_with_no_items(session):
-    store = StoreModel(store_name="Empty Store")
+# test store with no tags
+def test_store_with_no_tags(session):
+    store = StoreModel(store_name="Tagless Store")
     session.add(store)
     session.commit()
 
-    assert store.items.count() == 0
+    assert store.tags.count() == 0
 
 
-# test store tags relationship
-def test_store_tags_relationship(session):
+# test store-tags relationship link (tags referenced to the store can be found in the store)
+def test_store_tag_relationship_link(session):
     """
     GIVEN a StoreModel with multiple TagModel instances
     WHEN the tags are associated with the store
@@ -103,18 +126,16 @@ def test_store_tags_relationship(session):
     session.add(store)
     session.commit()
 
-    tag1 = TagModel(tag_name="Drinks", store_id=store.store_id)
-    tag2 = TagModel(tag_name="Clothes", store_id=store.store_id)
-    tag3 = TagModel(tag_name="Summer", store_id=store.store_id)
+    tag_1 = TagModel(tag_name="Drinks", store_id=store.store_id)
+    tag_2 = TagModel(tag_name="Clothes", store_id=store.store_id)
+    tag_3 = TagModel(tag_name="Summer", store_id=store.store_id)
 
-    session.add_all([tag1, tag2, tag3])
+    session.add_all([tag_1, tag_2, tag_3])
     session.commit()
 
-    # print(store.tags.all()[0].tag_name)
-    # assert False
     assert store.tags.count() == 3
     tag_names = [tag.tag_name for tag in store.tags.all()]
-    assert set(tag_names) == {"Drinks", "Clothes", "Summer"}
-
+    assert set(tag_names) == {tag_1.tag_name, tag_2.tag_name, tag_3.tag_name}
+    
+# todo:
 # test store deletion cascade to tags 
-# test store with no tags

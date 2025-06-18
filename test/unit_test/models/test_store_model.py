@@ -10,3 +10,4 @@ def test_constructor():
     store = StoreModel(store_name="Fake Shop")
     assert isinstance(store, StoreModel)
     assert store.store_name == "Fake Shop"
+    assert isinstance(store.store_name, str)

@@ -15,3 +15,7 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 flask run
+- test flow
+- modesl: unit tests: integration tests
+- schema: units tests: integration tests
+- services: 
