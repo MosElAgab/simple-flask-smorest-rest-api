@@ -72,7 +72,7 @@ def test_store_with_no_items(session):
     assert store.items.count() == 0
 
 
-# test store-item relationship link (items referenced to the store can be found in the store)
+# test store-item relationship link (items referenced to the store can be retrieved)
 def test_store_item_relationship_link(session):
     store = StoreModel(store_name="Tesco")
     session.add(store)
