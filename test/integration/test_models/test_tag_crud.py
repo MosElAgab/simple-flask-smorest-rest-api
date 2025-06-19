@@ -1,17 +1,18 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from app.models import TagModel, StoreModel
+from app.models import TagModel, StoreModel, ItemModel
 
 
+# test crud operation (create, retieve, update and delete)
 def test_tag_crud_operations(session):
     """
     GIVEN a TagModel instance
     WHEN it is created, queried, updated, and deleted
     THEN the operations should behave as expected
     """
-    from app.models import StoreModel, TagModel
 
+    # create
     store = StoreModel(store_name="Some Store")
     session.add(store)
     session.commit()
@@ -39,9 +40,32 @@ def test_tag_crud_operations(session):
     assert session.query(TagModel).filter_by(tag_id=tag.tag_id).first() is None
 
 
+# test Field nullability
+@pytest.mark.parametrize("tag_data", [
+    {"store_id": 1},
+    {"tag_name": "Electronics"}
+])
+def test_tag_required_fields(session, tag_data):
+    """
+    GIVEN a TagModel
+    WHEN tag_name or store_id is missing
+    THEN an IntegrityError should be raised due to null constraint
+    """
+    store = StoreModel(store_name="Store", store_id=1)
+    session.add(store)
+    session.commit()
+
+    tag = TagModel(**tag_data)
+    session.add(tag)
+    with pytest.raises(IntegrityError):
+        session.commit()
+    session.rollback()
+
+   
+# test tag creation require a store for allocation
 def test_tag_requires_store(session):
     """
-    GIVEN an ItemModel with no valid store_id
+    GIVEN an TagModel with no valid store_id
     WHEN it's added to the session
     THEN an IntegrityError should be raised
     """
@@ -51,6 +75,7 @@ def test_tag_requires_store(session):
         session.commit()
 
 
+# test the uniquness of tags within a store
 def test_duplicate_tag_in_same_store_not_allowed(session):
     """
     GIVEN a StoreModel and two TagModel instances with the same name
@@ -116,4 +141,40 @@ def test_tag_store_relationship_link(session):
     assert tag.store.store_name == "My Store"
 
 
-#TODO: test teg item relationship (invloves many-to-many)
+# test tag can have no items
+def test_tag_with_no_items(session):
+    store = StoreModel(store_name="Empty Tags")
+    session.add(store)
+    session.commit()
+
+    tag = TagModel(tag_name="Unused", store_id=store.store_id)
+    session.add(tag)
+    session.commit()
+
+    assert len(tag.items) == 0
+
+
+# test item-tag relationship many-to-many tag can have many items
+def test_tag_can_have_many_items(session):
+    """
+    GIVEN a TagModel and multiple ItemModel instances in the same store
+    WHEN the tag is assigned to multiple items
+    THEN tag.items should contain all associated items
+    """
+    store = StoreModel(store_name="Store")
+    session.add(store)
+    session.commit()
+
+    item1 = ItemModel(item_name="Shirt", item_price=15.99, store_id=store.store_id)
+    item2 = ItemModel(item_name="Jeans", item_price=39.99, store_id=store.store_id)
+    tag = TagModel(tag_name="Clothing", store_id=store.store_id)
+
+    session.add_all([item1, item2, tag])
+    session.commit()
+
+    # Associate tag with both items
+    tag.items.extend([item1, item2])
+    session.commit()
+
+    item_names = [item.item_name for item in tag.items]
+    assert set(item_names) == {"Shirt", "Jeans"}

@@ -66,6 +66,10 @@ def test_item_requires_store(session):
     {"item_name": "Test Item", "item_price": 19.99}  # missing store_id
 ])
 def test_item_required_fields(session, item_data):
+    store = StoreModel(store_name="Store", store_id=1)
+    session.add(store)
+    session.commit()
+
     item = ItemModel(**item_data)
     session.add(item)
     with pytest.raises(IntegrityError):
@@ -179,6 +183,30 @@ def test_item_can_have_no_tags(session):
 
     assert len(item.tags) == 0
 
+
+# test item cannot have duplicate tags
+def test_duplicate_item_tag_pair_not_allowed(session):
+    """
+    GIVEN an ItemModel and a TagModel
+    WHEN the same tag is assigned twice to the same item
+    THEN an IntegrityError should be raised due to the unique constraint in the join table
+    """
+    store = StoreModel(store_name="Join Constraint Test Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Mango Juice", item_price=2.99, store_id=store.store_id)
+    tag = TagModel(tag_name="Beverage", store_id=store.store_id)
+    session.add_all([item, tag])
+    session.commit()
+
+    item.tags.append(tag)
+    session.commit()
+
+    item.tags.append(tag)
+
+    with pytest.raises(IntegrityError):
+        session.commit()
 
 # test item cannot be tagged with a tag in different store (prevent cross-store tagging.)
 # but first decide in which layer this validation fit the best (model, schema or service)
