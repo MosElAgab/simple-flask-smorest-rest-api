@@ -136,6 +136,26 @@ def test_store_tag_relationship_link(session):
     assert store.tags.count() == 3
     tag_names = [tag.tag_name for tag in store.tags.all()]
     assert set(tag_names) == {tag_1.tag_name, tag_2.tag_name, tag_3.tag_name}
+
+
+# test store deletion cascade to tags
+def test_store_deletion_cascades_to_tags(session):
+    """
+    """
+    store = StoreModel(store_name="Store with tags")
+    session.add(store)
+    session.commit()
     
-# todo:
-# test store deletion cascade to tags 
+    tag_1 = TagModel(tag_name="Tag A", store_id=store.store_id)
+    tag_2 = TagModel(tag_name="Tag B", store_id=store.store_id)
+    session.add_all([tag_1, tag_2])
+    session.commit()
+
+    assert store.tags.count() == 2
+    tag_ids = [tag_1.tag_id, tag_2.tag_id]
+
+    session.delete(store)
+    session.commit()
+
+    remaining = session.query(TagModel).filter(TagModel.tag_id.in_(tag_ids)).all()
+    assert len(remaining) == 0

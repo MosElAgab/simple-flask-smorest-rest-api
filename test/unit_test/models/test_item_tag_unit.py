@@ -10,4 +10,6 @@ def test_constructor():
     item_tag = ItemTagModel(item_id=1, tag_id=2)
     assert isinstance(item_tag, ItemTagModel)
     assert item_tag.item_id == 1
+    assert isinstance(item_tag.item_id, int)
     assert item_tag.tag_id == 2
+    assert isinstance(item_tag.tag_id, int)
