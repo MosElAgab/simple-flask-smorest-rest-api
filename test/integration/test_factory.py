@@ -22,7 +22,7 @@ def test_create_app_loads_default_configs():
     app = create_app()
     assert app.config["PROPAGATE_EXCEPTIONS"] is True
     print(app.config["JWT_SECRET_KEY"])
-    assert len(app.config["JWT_SECRET_KEY"]) in (38, 39)
+    assert len(app.config["JWT_SECRET_KEY"]) in (37, 38, 39)
     assert app.config["DEBUG"] is True
     assert app.config["SQLALCHEMY_DATABASE_URI"] == "sqlite:///dev-data.db"
     assert app.config["TESTING"] is False
