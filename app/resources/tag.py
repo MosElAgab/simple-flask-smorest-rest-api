@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.db import db
 from app.models import TagModel, StoreModel, ItemModel
-from app.schema import TagSchema, PlainTagSchema, ItemSchema, TagAndItemSchema
+from app.schemas import TagSchema, PlainTagSchema, ItemSchema, TagAndItemSchema
 
 
 blp = Blueprint("tags", __name__, description="Operations on tags.")

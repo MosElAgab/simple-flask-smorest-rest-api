@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 
 from app.db import db
 from app.models import StoreModel
-from app.schema import StoreSchema, StoreUpdateSchema, PlainStoreSchema
+from app.schemas import StoreSchema, StoreUpdateSchema, PlainStoreSchema
 
 
 blp = Blueprint("stores", __name__, description="Operations on stores")

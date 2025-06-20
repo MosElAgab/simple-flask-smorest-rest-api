@@ -5,7 +5,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 
 from ..blocklist import BLOCKLIST
 from ..db import db
-from ..schema import UserSchema
+from ..schemas import UserSchema
 from ..models import UserModel
 
 
