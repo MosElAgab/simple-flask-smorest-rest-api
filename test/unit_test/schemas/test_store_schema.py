@@ -5,6 +5,7 @@ from app.schemas import PlainStoreSchema, StoreUpdateSchema, StoreSchema
 
 
 ## PlainStoreSchema
+
 # test valid load passed
 def test_plain_store_schema_valid_load():
     schema = PlainStoreSchema()
@@ -61,6 +62,7 @@ def test_plain_store_schema_dump_includes_dump_only_fields():
 
 
 ## UpdateStoreSchema
+
 # test valid load passed
 def test_store_update_schema_valid_load():
     schema = StoreUpdateSchema()
@@ -93,6 +95,7 @@ def test_store_update_schema_rejects_unknown_field():
 
 
 ## StoreSchema
+
 # test valid load (inherited from PlainStoreSchema)
 def test_store_schema_valid_load_from_base():
     schema = StoreSchema()

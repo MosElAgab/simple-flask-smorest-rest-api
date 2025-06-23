@@ -5,6 +5,7 @@ from app.schemas import PlainItemSchema, ItemUpdateSchema, ItemSchema
 
 
 ## PlainItemSchema
+
 # test valid load passed
 def test_plain_item_schema_valid_load():
     schema = PlainItemSchema()
@@ -85,6 +86,7 @@ def test_plain_item_schema_dump_includes_dump_only():
 
 
 ## ItemUpdateSchema
+
 # test valid load passed
 def test_item_update_schema_valid__load():
     schema = ItemUpdateSchema()
@@ -137,6 +139,7 @@ def test_item_update_schema_rejects_unknown_field():
 
 
 ## ItemSchema
+
 # test valid load (inherited from PlainItemSchema)
 def test_item_schema_valid_load_from_base():
     schema = ItemSchema()
