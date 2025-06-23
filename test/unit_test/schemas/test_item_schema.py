@@ -161,6 +161,8 @@ def test_item_schema_ejects_dump_only_fields_on_load():
             "store": {"store_id": 1},
             "tags": [{"tag_id": 1}]
         })
+    assert "store" in err.value.messages  
+    assert "tags" in err.value.messages
 
 
 # test dumping with nested store and tags (SQL_Alchemy-like class)
