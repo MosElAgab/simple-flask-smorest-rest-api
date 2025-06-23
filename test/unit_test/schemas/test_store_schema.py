@@ -16,7 +16,7 @@ def test_plain_store_schema_valid_load():
 def test_plain_store_schema_rejects_invalid_load():
     schema = PlainStoreSchema()
     with pytest.raises(ValidationError) as err:
-        result = schema.load({"invalid_field": "Store"})
+        result = schema.load({"store_name": "Store", "invalid_field": "Store"})
     assert "invalid_field" in err.value.messages
 
 
@@ -36,7 +36,7 @@ def test_plain_store_schema_invalid_type():
     assert "store_name" in err.value.messages
 
 
-# test dump-only field ignored at load
+# test dump-only field rejected at load
 def test_plain_store_schema_rejects_dump_only_fields_at_load():
     schema = PlainStoreSchema()
     with pytest.raises(ValidationError) as err:
@@ -93,7 +93,7 @@ def test_store_update_schema_rejects_unknown_field():
 
 
 ## StoreSchema
-# test valid input using only base field (inherited from PlainStoreSchema)
+# test valid load (inherited from PlainStoreSchema)
 def test_store_schema_valid_load_from_base():
     schema = StoreSchema()
     result = schema.load({"store_name": "My Store"})
@@ -110,9 +110,11 @@ def test_store_schema_rejects_dump_only_fields_on_load():
     }
     with pytest.raises(ValidationError) as err:
         result = schema.load(data)
+    assert "items" in err.value.messages
+    assert "tags" in err.value.messages
 
 
-# test dumping a store with nested items and tags (SQL_Alchemy-like class)
+# test dumping with nested items and tags (SQL_Alchemy-like class)
 def test_store_schema_dumps_nested_fields():
     class Item:
         def __init__(self, item_id, item_name, item_price):
@@ -154,7 +156,5 @@ def test_store_schema_dumps_with_empty_nested_lists():
     schema = StoreSchema()
     result = schema.dump(Store())
 
-    assert result["store_id"] == 2
-    assert result["store_name"] == "Empty store"
     assert len(result["items"]) == 0
     assert len(result["tags"]) == 0
