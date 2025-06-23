@@ -12,7 +12,6 @@ blp = Blueprint("items", __name__, description="Operations on items")
 
 
 # /item
-# FIXME: item or items
 @blp.route("/item")
 class ItemList(MethodView):
     @blp.response(200, ItemSchema(many=True))
