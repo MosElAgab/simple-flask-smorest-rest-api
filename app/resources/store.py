@@ -20,16 +20,20 @@ class StoreList(MethodView):
         return stores
 
     @jwt_required()
-    @blp.arguments(StoreSchema)
-    @blp.response(201, StoreSchema)
+    @blp.arguments(PlainStoreSchema)
+    @blp.response(201, PlainStoreSchema)
     def post(self, store_data):
         new_store = StoreModel(**store_data)
         try:
             db.session.add(new_store)
             db.session.commit()
         except IntegrityError as e:
-            abort(500, message="Database constraint violated: " + str(e.orig))
+            db.session.rollback()
+            if "UNIQUE constraint" in str(e.orig):
+                abort(409, message="A store with this name already exists.")
+            abort(400, message="Database Integrity violated: " + str(e.orig))
         except SQLAlchemyError as e:
+            db.session.rollback()
             abort(500, message="Database Error: " + str(e.orig))
 
         return new_store
@@ -40,7 +44,7 @@ class StoreList(MethodView):
 class Store(MethodView):
     @blp.response(200, StoreSchema)
     def get(self, store_id):
-        store = StoreModel.query.get_or_404(store_id, description="Store not Found")
+        store = StoreModel.query.get_or_404(store_id)
         return store
 
     def delete(self, store_id):
@@ -61,5 +65,8 @@ class Store(MethodView):
         try:
             db.session.commit()
         except IntegrityError as e:
-                abort(500, message="Database constraint violated: " + str(e.orig))
+                db.session.rollback()
+                if "UNIQUE constraint" in str(e.orig):
+                    abort(409, message="A store with this name already exists.")
+                abort(400, message="Database constraint violated: " + str(e.orig))
         return store

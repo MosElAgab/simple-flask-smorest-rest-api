@@ -2,9 +2,11 @@ import pytest
 import sqlite3
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
+from flask_jwt_extended import create_access_token
 
 from app import create_app
 from app.db import db
+from app.models import UserModel
 
 
 # enforces fk constraint in sqlite
@@ -37,3 +39,16 @@ def session(app):
     with app.app_context():
         yield db.session
         db.session.remove()
+
+
+@pytest.fixture
+def auth_header(session):
+    from app.models import UserModel
+    from flask_jwt_extended import create_access_token
+
+    user = UserModel(username="testuser", password="testpass")
+    session.add(user)
+    session.commit()
+
+    token = create_access_token(identity=str(user.user_id))
+    return {"Authorization": f"Bearer {token}"}

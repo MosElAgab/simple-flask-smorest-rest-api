@@ -64,6 +64,7 @@ class UserLogin(MethodView):
         
         abort(401, message="Invalid credentials.")
 
+
 @blp.route("/logout")
 class UserLogout(MethodView):
     @jwt_required()
