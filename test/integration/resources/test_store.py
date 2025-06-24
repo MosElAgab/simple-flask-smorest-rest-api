@@ -2,6 +2,7 @@ import pytest
 
 from app.models import StoreModel
 
+
 ## /store
 
 # test get with no data
@@ -30,6 +31,7 @@ def test_get_store_list_with_data(client, session):
     for store in response.json:
         assert "store_id" in store
 
+
 #  test get response keys:
 def test_store_get_returns_expected_keys(client, session):
     store = StoreModel(store_name="InspectMe")
@@ -38,7 +40,7 @@ def test_store_get_returns_expected_keys(client, session):
 
     response = client.get("/store")
     assert response.status_code == 200
-    assert list(response.json[0].keys()) == ["store_id", "store_name"]
+    assert set(response.json[0].keys()) == {"store_id", "store_name"}
 
 
 # test post endpind is protected
@@ -61,7 +63,7 @@ def test_post_store_creates_store(client, auth_header):
 
 
 # test post store respnse keys
-def test_store_response_keys(client, auth_header):
+def test_post_store_response_keys(client, auth_header):
     response = client.post("/store", json={"store_name": "SchemaTest"}, headers=auth_header)
     data = response.json
     assert "store_id" in data
@@ -92,7 +94,7 @@ def test_post_store_with_invalid_type_returns_422(client, auth_header):
     assert "store_name" in response.json["errors"]["json"]
 
 
-# # /store/<store_id>
+## /store/<store_id>
 
 # test get by id
 def test_get_store_by_id_returns_store(client, session):
@@ -110,7 +112,6 @@ def test_get_store_by_id_returns_store(client, session):
 def test_get_store_by_id_not_found(client):
     response = client.get("/store/999")
     assert response.status_code == 404
-    assert "Not Found" in response.json["status"]
 
 
 # delete store

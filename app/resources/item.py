@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from flask_jwt_extended import jwt_required
 
 from app.db import db
@@ -28,6 +28,13 @@ class ItemList(MethodView):
         try:
             db.session.add(item)
             db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            if "UNIQUE constraint" in str(e.orig):
+                abort(409, message="This item already exists in this store.")
+            elif "FOREIGN KEY constraint" in str(e.orig):
+                abort(409, message="Store referenced does not exist.")
+            abort(400, message="Database Integrity violated: " + str(e.orig))
         except SQLAlchemyError as e:
             db.session.rollback()
             abort(500, message="Database Error: " + str(e.orig))
@@ -61,5 +68,20 @@ class Store(MethodView):
         else:
             item = ItemModel(item_id=item_id, **item_data)
             db.session.add(item)
-        db.session.commit()
+
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            if "UNIQUE constraint" in str(e.orig):
+                abort(409, message="This item already exists in this store.")
+            elif "FOREIGN KEY constraint" in str(e.orig):
+                abort(409, message="Store referenced does not exist.")
+            elif "NOT NULL constraint" in str(e.orig):
+                abort(
+                    409,
+                    message="This item does not exist neither can be created due to invalid load"
+                )
+            abort(400, message="Database Integrity Error: " + str(e.orig))
+
         return item
