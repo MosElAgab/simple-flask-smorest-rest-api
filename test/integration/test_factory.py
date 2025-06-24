@@ -101,3 +101,13 @@ def test_create_app_with_db_url_override():
     url = "sqlite:///override.db"
     app = create_app(config_name="development", db_url=url)
     assert app.config["SQLALCHEMY_DATABASE_URI"] == url
+
+
+def test_testing_config_sets_jwt_secret_key():
+    """
+    GIVEN TestingConfig
+    WHEN create_app is called with 'testing'
+    THEN JWT_SECRET_KEY should be set to a known static test value
+    """
+    app = create_app("testing")
+    assert app.config["JWT_SECRET_KEY"] == "test_secret"
