@@ -1,6 +1,6 @@
 import pytest
 
-from app.models import ItemModel, StoreModel
+from app.models import ItemModel, StoreModel, TagModel
 
 
 ## /item
@@ -173,6 +173,29 @@ def test_get_item_by_id_not_found(client):
     assert response.status_code == 404
 
 
+# test for nested store and tags
+def test_get_item_by_id_includes_nested_store_and_tags(client, session):
+
+    store = StoreModel(store_name="Test Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Book", item_price=12.5, store_id=store.store_id)
+    tag1 = TagModel(tag_name="Fiction", store_id=store.store_id)
+    tag2 = TagModel(tag_name="Education", store_id=store.store_id)
+    session.add_all([item, tag1, tag2])
+    session.commit()
+
+    item.tags.extend([tag1, tag2])
+    session.commit()
+
+    response = client.get(f"/item/{item.item_id}")
+    assert response.status_code == 200
+    assert response.json["store"]["store_name"] == "Test Store"
+    assert len(response.json["tags"]) == 2
+    assert {t["tag_name"] for t in response.json["tags"]} == {"Fiction", "Education"}
+
+
 # delete item
 def test_delete_item_by_id(client, session):
     store = StoreModel(store_name="Deli")
@@ -253,6 +276,22 @@ def test_put_item_raises_409_on_duplicate(client, session):
     print(response.json)
     assert response.status_code == 409
     assert response.json["message"] == "This item already exists in this store."
+
+
+# test for partial update
+def test_partial_update_item_price_only(client, session):
+    store = StoreModel(store_name="Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Tablet", item_price=300, store_id=store.store_id)
+    session.add(item)
+    session.commit()
+
+    response = client.put(f"/item/{item.item_id}", json={"item_price": 250.0})
+    assert response.status_code == 200
+    assert response.json["item_price"] == 250.0
+    assert response.json["item_name"] == "Tablet"
 
 
 # test invalid payload when updates non-existing item (cannot create because payload invalid)

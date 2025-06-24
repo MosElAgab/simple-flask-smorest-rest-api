@@ -85,3 +85,6 @@ class Store(MethodView):
             abort(400, message="Database Integrity Error: " + str(e.orig))
 
         return item
+
+
+# test for nested fields

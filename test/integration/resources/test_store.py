@@ -1,6 +1,6 @@
 import pytest
 
-from app.models import StoreModel
+from app.models import StoreModel, ItemModel, TagModel
 
 
 ## /store
@@ -41,6 +41,49 @@ def test_store_get_returns_expected_keys(client, session):
     response = client.get("/store")
     assert response.status_code == 200
     assert set(response.json[0].keys()) == {"store_id", "store_name"}
+
+
+# test for nested items and tags
+def test_get_store_by_id_includes_nested_items_and_tags(client, session):
+
+    # Arrange: create store
+    store = StoreModel(store_name="Store with Nested")
+    session.add(store)
+    session.commit()
+
+    # Arrange: create items and tags for the store
+    item1 = ItemModel(item_name="Bread", item_price=1.5, store_id=store.store_id)
+    item2 = ItemModel(item_name="Butter", item_price=2.0, store_id=store.store_id)
+    tag1 = TagModel(tag_name="Grocery", store_id=store.store_id)
+    tag2 = TagModel(tag_name="Dairy", store_id=store.store_id)
+
+    session.add_all([item1, item2, tag1, tag2])
+    session.commit()
+
+    # Associate tags with items
+    item1.tags.append(tag1)
+    item2.tags.append(tag2)
+    session.commit()
+
+    # Act: GET /store/<id>
+    response = client.get(f"/store/{store.store_id}")
+    assert response.status_code == 200
+
+    data = response.json
+
+    # Assert store fields
+    assert data["store_name"] == "Store with Nested"
+    assert data["store_id"] == store.store_id
+
+    # Assert nested items
+    assert len(data["items"]) == 2
+    item_names = {item["item_name"] for item in data["items"]}
+    assert item_names == {"Bread", "Butter"}
+
+    # Assert nested tags
+    assert len(data["tags"]) == 2
+    tag_names = {tag["tag_name"] for tag in data["tags"]}
+    assert tag_names == {"Grocery", "Dairy"}
 
 
 # test post endpind is protected
