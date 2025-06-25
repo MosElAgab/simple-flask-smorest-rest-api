@@ -46,7 +46,20 @@ def auth_header(session):
     from app.models import UserModel
     from flask_jwt_extended import create_access_token
 
-    user = UserModel(username="testuser", password="testpass")
+    user = UserModel(username="TestUser", password="testpass")
+    session.add(user)
+    session.commit()
+
+    token = create_access_token(identity=str(user.user_id))
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def admin_auth_header(session):
+    from app.models import UserModel
+    from flask_jwt_extended import create_access_token
+
+    user = UserModel(username="AdminUser", password="testpass", is_admin=True)
     session.add(user)
     session.commit()
 

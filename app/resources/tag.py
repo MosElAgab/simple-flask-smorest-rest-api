@@ -95,6 +95,7 @@ class ItemTag(MethodView):
             abort(400, message="item and tag must be in the same store.")
 
         item.tags.append(tag)
+        #TODO: linking the same item twice should raise 409 conflict
         try:
             db.session.commit()
         except SQLAlchemyError as e:
@@ -117,3 +118,6 @@ class ItemTag(MethodView):
         message = "Tag was unlinked from item successfully"
 
         return {"message": message, "tag": tag, "item": item}
+
+# TODO: re-consider error handling (using error message is db specific)
+# alos, consider race condition

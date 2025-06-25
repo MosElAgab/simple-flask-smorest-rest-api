@@ -54,7 +54,7 @@ def create_app(config_name: str = None, db_url: str = None):
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
         return (
-            jsonify({"message": "The token has expired.", "error": "token_expired"}),
+            jsonify({"description": "The token has expired.", "error": "token_expired"}),
             401,
         )
 
@@ -62,7 +62,7 @@ def create_app(config_name: str = None, db_url: str = None):
     def invalid_token_callback(error):
         return (
             jsonify(
-                {"message": "Signature verification failed.", "error": "invalid_token"}
+                {"description": "Signature verification failed.", "error": "invalid_token"}
             ),
             401,
         )

@@ -20,7 +20,7 @@ class UserRegister(MethodView):
             UserModel.username == user_data["username"]
         ).first():
             abort(409, message="A user with the given username already exists.")
-        
+
         user = UserModel(
             username=user_data["username"],
             password=pbkdf2_sha256.hash(user_data["password"])
@@ -34,7 +34,7 @@ class UserRegister(MethodView):
 @blp.route("/register-admin")
 class AdminRegister(MethodView):
     @blp.arguments(UserSchema)
-    @blp.response(201, UserSchema)
+    @blp.response(201)
     def post(self, admin_data):
         if UserModel.query.filter(
             UserModel.username == admin_data["username"]
@@ -47,7 +47,7 @@ class AdminRegister(MethodView):
 
         db.session.add(admin)
         db.session.commit()
-        return admin
+        return {"message": "Admin created successfully."}
 
 
 @blp.route("/login")
