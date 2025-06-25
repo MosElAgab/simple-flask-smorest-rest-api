@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from app.db import db
 from app.models import TagModel, StoreModel, ItemModel
@@ -12,7 +12,7 @@ blp = Blueprint("tags", __name__, description="Operations on tags.")
 
 @blp.route("/store/<int:store_id>/tag")
 class TagsInStore(MethodView):
-    @blp.response(200, TagSchema(many=True))
+    @blp.response(200, PlainTagSchema(many=True))
     def get(self, store_id):
         # tag = TagModel.query.get_or_404()
         store = StoreModel.query.get_or_404(store_id)
@@ -21,12 +21,21 @@ class TagsInStore(MethodView):
     @blp.arguments(TagSchema)
     @blp.response(201, TagSchema)
     def post(self, tag_data, store_id):
-        if TagModel.query.filter(TagModel.store_id == store_id, TagModel.tag_name == tag_data["tag_name"]).first():
+        if TagModel.query.filter(
+            TagModel.store_id == store_id,
+            TagModel.tag_name == tag_data["tag_name"]
+        ).first():
             abort(400, message="A tag with that name already exist in that Store.")
+
         tag = TagModel(store_id=store_id, **tag_data)
         db.session.add(tag)
+
         try:
             db.session.commit()
+        except IntegrityError as e:
+            if "FOREIGN KEY constraint" in str(e.orig):
+                abort(409, message="Store referenced does not exist.")
+            abort(400, message="Database Integrity violated: " + str(e.orig))
         except SQLAlchemyError as e:
             abort(500, message="Error in the database side: " + str(e))
         return tag
@@ -42,7 +51,7 @@ class TagList(MethodView):
 
 @blp.route("/tag/<int:tag_id>")
 class Tag(MethodView):
-    @blp.response(200, PlainTagSchema)
+    @blp.response(200, TagSchema)
     def get(self, tag_id):
         tag =TagModel.query.get_or_404(tag_id)
         return tag
@@ -52,10 +61,14 @@ class Tag(MethodView):
         description="Deletes a tag if no item is tagged with it.",
         example={"message": "Tag deleted."},
     )
-    @blp.alt_response(404, description="Tag not found.")
+    @blp.alt_response(
+        404,
+        description="Tag not found.",
+        example={"message": "Tag not found."}
+    )
     @blp.alt_response(
         400,
-        description="Returned if the tag is assigned to one or more items. In this case, the tag is not deleted.",
+        description="tag is not deleted, unlink item/s first.",
     )
     def delete(self, tag_id):
         tag = TagModel.query.get_or_404(tag_id)
@@ -66,7 +79,7 @@ class Tag(MethodView):
             return {"message": "Tag deleted."}
         abort(
             400,
-            message="Could not delete tag. Make sure tag is not associated with any items, then try again.",  # noqa: E501
+            message="tag is not deleted, unlink item/s first."  # noqa: E501
         )
 
 
