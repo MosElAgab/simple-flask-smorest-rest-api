@@ -328,3 +328,23 @@ def test_unlink_non_existing_item_or_tag_returns_404(client, session):
 
     assert client.delete(f"/item/9999/tag/{tag.tag_id}").status_code == 404
     assert client.delete(f"/item/{item.item_id}/tag/9999").status_code == 404
+
+
+# unlink tag to
+def test_unlink_tag_not_associated_with_item_raises_value_error(client, session):
+    store = StoreModel(store_name="Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Unlinked Item", item_price=5.0, store_id=store.store_id)
+    tag = TagModel(tag_name="Lonely Tag", store_id=store.store_id)
+    session.add_all([item, tag])
+    session.commit()
+
+    # Do NOT associate tag with item
+    response = client.delete(f"/item/{item.item_id}/tag/{tag.tag_id}")
+    
+    assert response.status_code == 400
+    print(response.json)
+
+    assert "Item is not linked to" in response.json["message"]

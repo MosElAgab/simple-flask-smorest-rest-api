@@ -111,7 +111,7 @@ class ItemTag(MethodView):
             item.tags.remove(tag)
             db.session.commit()
         except ValueError as e:
-            abort(500, message="Database Error: " + str(e))
+            abort(400, message=f"Item is not linked to {tag.tag_name}")
         except SQLAlchemyError as e:
             abort(500, message="Database Error: " + str(e))
         
