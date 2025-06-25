@@ -85,11 +85,14 @@ class Tag(MethodView):
 
 @blp.route("/item/<int:item_id>/tag/<int:tag_id>")
 class ItemTag(MethodView):
-    # TODO: what if the tag attached is not in the same store as the model
     @blp.response(201, ItemSchema)
     def post(self, item_id, tag_id):
         item = ItemModel.query.get_or_404(item_id)
         tag = TagModel.query.get_or_404(tag_id)
+
+        # tag and item must be in the same store
+        if tag.store_id != item.store_id:
+            abort(400, message="item and tag must be in the same store.")
 
         item.tags.append(tag)
         try:
@@ -97,7 +100,7 @@ class ItemTag(MethodView):
         except SQLAlchemyError as e:
             abort(500, message="Database Error: " + str(e))
         return item
-    
+
     @blp.response(200, TagAndItemSchema)
     def delete(sefl, item_id, tag_id):
         item = ItemModel.query.get_or_404(item_id)
@@ -112,5 +115,5 @@ class ItemTag(MethodView):
             abort(500, message="Database Error: " + str(e))
         
         message = "Tag was unlinked from item successfully"
-        
+
         return {"message": message, "tag": tag, "item": item}

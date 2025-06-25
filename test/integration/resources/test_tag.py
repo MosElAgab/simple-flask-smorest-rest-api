@@ -232,3 +232,99 @@ def test_delete_tag_with_items_returns_400(client, session):
     response = client.delete(f"/tag/{tag.tag_id}")
     assert response.status_code == 400
     assert "tag is not deleted" in response.json["message"]
+
+
+## /ietm/<item_id>/tag/<tag_id>
+
+# test link tag to item
+def test_link_tag_to_item(client, session):
+    store = StoreModel(store_name="Test Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Table", item_price=50.0, store_id=store.store_id)
+    tag = TagModel(tag_name="Furniture", store_id=store.store_id)
+    session.add_all([item, tag])
+    session.commit()
+
+    response = client.post(f"/item/{item.item_id}/tag/{tag.tag_id}")
+    assert response.status_code == 201
+    assert tag.tag_name in [t["tag_name"] for t in response.json["tags"]]
+
+    # test respose keys
+    assert set(response.json.keys()) == {
+        "item_id",
+        "item_name",
+        "item_price",
+        "tags",
+        "store"
+    }
+
+
+# test link non-existing item or non-esxisting tag
+def test_link_non_existing_item_or_tag_returns_404(client, session):
+    store = StoreModel(store_name="Test")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Chair", item_price=20.0, store_id=store.store_id)
+    tag = TagModel(tag_name="Office", store_id=store.store_id)
+    session.add_all([item, tag])
+    session.commit()
+
+    assert client.post(f"/item/9999/tag/{tag.tag_id}").status_code == 404
+    assert client.post(f"/item/{item.item_id}/tag/9999").status_code == 404
+
+
+# test link item to a tag in different store (shoild raise 404 or what is related)
+def test_link_tag_to_item_from_different_store_fails_or_works(client, session):
+    store1 = StoreModel(store_name="Electronics")
+    store2 = StoreModel(store_name="Furniture")
+    session.add_all([store1, store2])
+    session.commit()
+
+    item = ItemModel(item_name="TV", item_price=300.0, store_id=store1.store_id)
+    tag = TagModel(tag_name="Home", store_id=store2.store_id)
+    session.add_all([item, tag])
+    session.commit()
+
+    response = client.post(f"/item/{item.item_id}/tag/{tag.tag_id}")
+    assert response.status_code == 400
+    assert response.json["message"] == "item and tag must be in the same store."
+
+
+# test unlink tag from item
+def test_unlink_tag_from_item_success(client, session):
+    store = StoreModel(store_name="General")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Notebook", item_price=3.0, store_id=store.store_id)
+    tag = TagModel(tag_name="Stationery", store_id=store.store_id)
+    session.add_all([item, tag])
+    session.commit()
+
+    item.tags.append(tag)
+    session.commit()
+
+    response = client.delete(f"/item/{item.item_id}/tag/{tag.tag_id}")
+    assert response.status_code == 200
+    assert response.json["message"] == "Tag was unlinked from item successfully"
+
+    # test response keys
+    assert {"message", "tag", "item"} == set(response.json.keys())
+
+
+# test unlink non-existing item or non-esxisting tag
+def test_unlink_non_existing_item_or_tag_returns_404(client, session):
+    store = StoreModel(store_name="Unlink Store")
+    session.add(store)
+    session.commit()
+
+    item = ItemModel(item_name="Marker", item_price=1.5, store_id=store.store_id)
+    tag = TagModel(tag_name="Drawing", store_id=store.store_id)
+    session.add_all([item, tag])
+    session.commit()
+
+    assert client.delete(f"/item/9999/tag/{tag.tag_id}").status_code == 404
+    assert client.delete(f"/item/{item.item_id}/tag/9999").status_code == 404
