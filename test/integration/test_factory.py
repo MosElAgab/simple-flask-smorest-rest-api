@@ -38,11 +38,9 @@ def test_create_app_loads_configs_using_config_name(config_name):
     WHEN the create_app function is called with that environment
     THEN ensure the correct default database URI is set for the environment
     """
-    create_app(config_name)
     cfg = config_mapping[config_name]
     app = create_app(config_name=config_name)
-    print(config_name)
-    assert app.config["TESTING"] is getattr(cfg, "TESTING", False)
+    assert app.config["TESTING"] == getattr(cfg, "TESTING", False)
     assert app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] is False
 
 
@@ -71,8 +69,9 @@ def test_create_app_invalid_env(monkeypatch):
     THEN ensure it raises a ValueError
     """
     monkeypatch.setenv("FLASK_ENV", "invalid_config_name")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError) as e:
         create_app()
+    assert str(e.value) == "Unknown config: invalid_config_name."
 
 
 def test_create_app_respects_production_env(monkeypatch):

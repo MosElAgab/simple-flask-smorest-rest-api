@@ -24,7 +24,7 @@ def create_app(config_name: str = None, db_url: str = None):
     config_name = config_name or os.getenv("FLASK_ENV", "development")
     cfg = config_mapping.get(config_name)
     if cfg is None:
-        raise ValueError(f"Unknown config: {config_name}")
+        raise ValueError(f"Unknown config: {config_name}.")
     app.config.from_object(cfg)
 
     # for overrides instance/config.py

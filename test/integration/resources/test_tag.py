@@ -341,7 +341,7 @@ def test_unlink_tag_not_associated_with_item_raises_value_error(client, session)
     session.add_all([item, tag])
     session.commit()
 
-    # Do NOT associate tag with item
+
     response = client.delete(f"/item/{item.item_id}/tag/{tag.tag_id}")
     
     assert response.status_code == 400
