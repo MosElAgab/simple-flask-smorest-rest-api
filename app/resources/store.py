@@ -29,6 +29,7 @@ class StoreList(MethodView):
             db.session.commit()
         except IntegrityError as e:
             db.session.rollback()
+            # FIXME: in postgres : "duplicate key" in str(e.orig):
             if "UNIQUE constraint" in str(e.orig):
                 abort(409, message="A store with this name already exists.")
             abort(400, message="Database Integrity violated: " + str(e.orig))
