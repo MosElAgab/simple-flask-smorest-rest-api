@@ -20,4 +20,9 @@ USER app
 
 EXPOSE 5000
 
-CMD ["flask", "run", "--host", "0.0.0.0"]
+## run
+# dev
+# CMD ["flask", "run", "--host", "0.0.0.0"]
+# prod
+CMD ["gunicorn", "-w", "3", "-b", "0.0.0.0:5000", "app:create_app()"]
+# workers to be adjusted based on the host machine spec

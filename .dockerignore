@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.pyd
+venv/
+.venv
+.git/
+.env
+env/
+*.log
+*.sqlite3
+.DS_Store
+test.md
+/.vscode
+commands_notes.md
+# maybe tests should be ignored and setup.cfg
