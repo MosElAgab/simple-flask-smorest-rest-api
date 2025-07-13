@@ -35,6 +35,8 @@ def create_app(config_name: str = None, db_url: str = None):
     if db_url:
         app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 
+    print("📦 Using DB URI:", app.config["SQLALCHEMY_DATABASE_URI"])
+
     db.init_app(app)
 
     api = Api(app)

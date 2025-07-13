@@ -1,0 +1,28 @@
+version: "3.8"
+name: flask-rest-api
+
+
+services:
+  app:
+    build: .
+    image: flask-somrest-rest-api
+    container_name: flask-app
+    ports:
+      - 5007:5000
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: postgres:16.1
+    container_name: postgres-db
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+     - 5010:5432
+    restart: always
+volumes:
+  postgres-data:

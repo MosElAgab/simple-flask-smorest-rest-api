@@ -17,10 +17,10 @@ build-app-container:
 	docker build -t flask-somrest-rest-api .
 
 run-app-container:
-	docker run -dp 5007:5000 -w /app -v "$(shell pwd):/app" --name my_app flask-somrest-rest-api
+	docker run -dp 5007:5000 -w /app -v "$(shell pwd):/app" --name flask-app flask-somrest-rest-api
 
 run-app-container-prod:
-	docker run -dp 5007:5000 -w /app --env-file .env --name my_app flask-somrest-rest-api
+	docker run -dp 5007:5000 -w /app --env-file .env --name flask-app flask-somrest-rest-api
 
 run-app:
 	flask run
