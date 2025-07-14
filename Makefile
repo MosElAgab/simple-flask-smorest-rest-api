@@ -1,5 +1,5 @@
 # Default task
-.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage run-app-container-prod 
+.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage run-app-container-prod migrate
 
 help:
 	@echo "  Note:            ❌ Please activate the virtual environment first."
@@ -52,6 +52,8 @@ print-req:
 
 up:
 	docker-compose up -d --build
+
+migrate:
 	docker-compose exec app flask db upgrade
 
 down:
