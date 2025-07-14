@@ -39,7 +39,6 @@ def create_app(config_name: str = None, db_url: str = None):
 
     api = Api(app)
 
-    # how to normally produce a secret key. it should be store it in .env
     jwt = JWTManager(app)
 
     @jwt.additional_claims_loader
