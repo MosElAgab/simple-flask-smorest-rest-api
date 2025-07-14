@@ -1,5 +1,5 @@
 # Default task
-.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage
+.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage run-app-container-prod 
 
 help:
 	@echo "  Note:            ❌ Please activate the virtual environment first."
@@ -17,9 +17,11 @@ build-app-container:
 	docker build -t flask-somrest-rest-api .
 
 run-app-container:
+	docker rm -f flask-app || true
 	docker run -dp 5007:5000 -w /app -v "$(shell pwd):/app" --name flask-app flask-somrest-rest-api
 
 run-app-container-prod:
+	docker rm -f flask-app || true
 	docker run -dp 5007:5000 -w /app --env-file .env --name flask-app flask-somrest-rest-api
 
 run-app:
@@ -47,3 +49,10 @@ install-req:
 
 print-req:
 	pip freeze > requirements.txt
+
+up:
+	docker-compose up -d --build
+	docker-compose exec app flask db upgrade
+
+down:
+	docker-compose down -v --remove-orphans
