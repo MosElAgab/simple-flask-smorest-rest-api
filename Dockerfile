@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.11.1
 
 # Create a non-root user without a home directory
 RUN adduser --disabled-password --no-create-home app
