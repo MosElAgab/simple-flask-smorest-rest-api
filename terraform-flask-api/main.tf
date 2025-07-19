@@ -28,3 +28,13 @@ resource "aws_security_group" "flask_sg" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
+
+resource "aws_instance" "flask_server" {
+    ami = "ami-0150ccaf51ab55a51"
+    instance_type = "t2.micro"
+    key_name = aws_key_pair.flask_key.key_name
+    vpc_security_group_ids = [aws_security_group.flask_sg.id]
+    tags = {
+        Name = "flask-api-server"
+    }
+}
