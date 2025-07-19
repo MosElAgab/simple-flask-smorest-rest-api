@@ -1,5 +1,5 @@
 # Default task
-.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage run-app-container-prod migrate terraform-plan
+.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage run-app-container-prod migrate terraform-plan terraform-apply terraform-destroy
 
 help:
 	@echo "  Note:            ❌ Please activate the virtual environment first."
@@ -61,3 +61,9 @@ down:
 
 terraform-plan:
 	terraform -chdir=terraform-flask-api plan
+
+terraform-apply:
+	terraform -chdir=terraform-flask-api apply
+
+terraform-destroy:
+	terraform -chdir=terraform-flask-api destroy
