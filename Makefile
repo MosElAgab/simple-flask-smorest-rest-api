@@ -1,5 +1,5 @@
 # Default task
-.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage run-app-container-prod migrate
+.PHONY: help build-app-container run-app-container run-app test lint format install-req print-req coverage run-app-container-prod migrate terraform-plan
 
 help:
 	@echo "  Note:            ❌ Please activate the virtual environment first."
@@ -58,3 +58,6 @@ migrate:
 
 down:
 	docker-compose down -v --remove-orphans
+
+terraform-plan:
+	terraform -chdir=terraform-flask-api plan

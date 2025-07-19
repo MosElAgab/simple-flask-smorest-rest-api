@@ -2,3 +2,29 @@ resource "aws_key_pair" "flask_key" {
   key_name   = "flask-api-key"
   public_key = file("~/.ssh/flask-api-key.pub")  # Make sure you have a public key
 }
+
+resource "aws_security_group" "flask_sg" {
+    name = "flask-api-sg"
+    description = "Allows ssh and custom ports for app"
+
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    
+    ingress {
+        from_port = 5007
+        to_port = 5007
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
