@@ -182,27 +182,3 @@ test.md
 # 
 commands_notes.md
 
-# Terraform
-# Local Terraform state
-*.tfstate
-*.tfstate.backup
-
-# Crash logs
-crash.log
-
-# Sensitive variable override files (if used)
-*.tfvars
-*.tfvars.json
-
-# Terraform working directory
-.terraform/
-
-# Ignore local override files
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-
-# Ignore .terraform.lock.hcl if sharing with multiple providers
-# Optional: keep this in Git if you want locked provider versions
-.terraform.lock.hcl

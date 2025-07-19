@@ -1,0 +1,23 @@
+# === Terraform Core Files ===
+*.tfstate
+*.tfstate.backup
+
+# === Terraform CLI Working Dir ===
+.terraform/
+
+# === Sensitive Files ===
+*.tfvars
+*.tfvars.json
+
+# === Crash Logs ===
+crash.log
+
+# === Local Overrides (if any) ===
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# === Optional: Lock File ===
+# You can keep this if you want consistent provider versions across team machines
+.terraform.lock.hcl
