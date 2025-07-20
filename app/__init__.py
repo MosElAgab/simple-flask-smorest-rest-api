@@ -15,7 +15,7 @@ from .resources.item import blp as ItemBlueprint
 from .resources.tag import blp as TagBlueprint
 from .resources.user import blp as UserBlueprint
 
-
+#FIXME: the use of load_dotenv() is missing which might be reason for some failing tests
 def create_app(config_name: str = None, db_url: str = None):
 
     app = Flask(__name__, instance_relative_config=True)
