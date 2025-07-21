@@ -26,3 +26,5 @@ services:
     restart: always
 volumes:
   postgres-data:
+
+# TODO: health check

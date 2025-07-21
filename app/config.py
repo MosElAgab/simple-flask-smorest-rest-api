@@ -36,3 +36,5 @@ config_mapping = {
     "testing": TestingConfig,
     "production": ProductionConfig
 }
+
+# TODO: Use os.environ["SECRET_NAME"] without default values for production configs.
