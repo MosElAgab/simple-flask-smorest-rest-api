@@ -50,6 +50,10 @@ user_data = <<-EOF
   
   curl -SL https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
+
+  git clone https://github.com/MosElAgab/simple-flask-smorest-rest-api.git /home/ec2-user/simple-flask-smorest-rest-api
+  sudo chown -R ec2-user:ec2-user /home/ec2-user/simple-flask-smorest-rest-api
+  
   EOF
 }
 output "instance_public_ip" {
