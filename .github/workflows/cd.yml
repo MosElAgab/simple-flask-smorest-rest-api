@@ -20,4 +20,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/EC2_key
           chmod 600 ~/.ssh/EC2_key
-          echo "all good"
+          echo "ssh key added!"
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          echo "ec2 key added to trusted ssh hosts"
