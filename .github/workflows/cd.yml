@@ -5,3 +5,19 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/EC2_key
+          chmod 600 ~/.ssh/EC2_key
+          echo "all good"
