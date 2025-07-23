@@ -24,6 +24,12 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           echo "ec2 key added to trusted ssh hosts"
       
+      - name: Upload .env
+        run: |
+          ssh -i ~/.ssh/EC2_key ec2-user@${{secrets.EC2_HOST}} << 'EOF'
+          echo '${{secrets.DOTENV_SECRETS}}' > /home/ec2-user/simple-flask-smorest-rest-api/.env
+          EOF
+
       - name: deploy code to EC2
         run: |
           ssh -i ~/.ssh/EC2_key ec2-user@${{secrets.EC2_HOST}} << 'EOF'
