@@ -27,7 +27,8 @@ jobs:
       - name: deploy code to EC2
         run: |
           ssh -i ~/.ssh/EC2_key ec2-user@${{secrets.EC2_HOST}} << 'EOF'
-          pwd
-          whoami
-          uname -a
+          cd /home/ec2-user/simple-flask-smorest-rest-api
+          git pull origin main
+          sudo make up
+          sudo make migrate
           EOF
