@@ -23,7 +23,17 @@ jobs:
           echo "ssh key added!"
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           echo "ec2 key added to trusted ssh hosts"
-      
+    
+      - name: repo check
+        run: |
+          ssh -i ~/.ssh/EC2_key ec2-user@${{secrets.EC2_HOST}} << 'EOF'
+          if [ ! -d /home/ec2-user/simple-flask-smorest-rest-api ]; then
+            git clone https://github.com/MosElAgab/simple-flask-smorest-rest-api.git /home/ec2-user/simple-flask-smorest-rest-api
+          else
+            echo repo exists
+          fi
+          EOF
+
       - name: Upload .env
         run: |
           ssh -i ~/.ssh/EC2_key ec2-user@${{secrets.EC2_HOST}} << 'EOF'
