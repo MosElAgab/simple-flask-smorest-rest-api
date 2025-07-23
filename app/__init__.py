@@ -91,6 +91,6 @@ def create_app(config_name: str = None, db_url: str = None):
 
     @app.route("/")
     def home():
-        return "Hello to Simple-Flask-Smorest-REST-API"
+        return "Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!"
 
     return app
