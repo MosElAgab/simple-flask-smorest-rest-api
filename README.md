@@ -16,7 +16,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 
 ---
 
-# Tech Stack
+## Tech Stack
 
 | **Category**               | **Tools / Frameworks**                    |
 | -------------------------- | ----------------------------------------- |
@@ -32,6 +32,156 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 
 ---
 
+## Project Structure
+
+```bash
+.
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── README.md
+├── app
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-311.pyc
+│   │   ├── blocklist.cpython-311.pyc
+│   │   ├── config.cpython-311.pyc
+│   │   ├── db.cpython-311.pyc
+│   │   └── schema.cpython-311.pyc
+│   ├── blocklist.py
+│   ├── config.py
+│   ├── db.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── item.cpython-311.pyc
+│   │   │   ├── item_model.cpython-311.pyc
+│   │   │   ├── item_tag.cpython-311.pyc
+│   │   │   ├── item_tag_model.cpython-311.pyc
+│   │   │   ├── store.cpython-311.pyc
+│   │   │   ├── store_model.cpython-311.pyc
+│   │   │   ├── tag.cpython-311.pyc
+│   │   │   ├── tag_model.cpython-311.pyc
+│   │   │   ├── user.cpython-311.pyc
+│   │   │   └── user_model.cpython-311.pyc
+│   │   ├── item_model.py
+│   │   ├── item_tag_model.py
+│   │   ├── store_model.py
+│   │   ├── tag_model.py
+│   │   └── user_model.py
+│   ├── resources
+│   │   ├── __pycache__
+│   │   │   ├── item.cpython-311.pyc
+│   │   │   ├── store.cpython-311.pyc
+│   │   │   ├── tag.cpython-311.pyc
+│   │   │   └── user.cpython-311.pyc
+│   │   ├── item.py
+│   │   ├── store.py
+│   │   ├── tag.py
+│   │   └── user.py
+│   └── schemas
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-311.pyc
+│       │   ├── all_schema.cpython-311.pyc
+│       │   ├── item_schema.cpython-311.pyc
+│       │   ├── shared_schema.cpython-311.pyc
+│       │   ├── store_schema.cpython-311.pyc
+│       │   ├── tag_schema.cpython-311.pyc
+│       │   └── user_schema.cpython-311.pyc
+│       ├── item_schema.py
+│       ├── shared_schema.py
+│       ├── store_schema.py
+│       ├── tag_schema.py
+│       └── user_schema.py
+├── commands_notes.md
+├── docker-compose.yml
+├── instance
+├── migrations
+│   ├── README
+│   ├── __pycache__
+│   │   └── env.cpython-311.pyc
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── __pycache__
+│       │   ├── a9241f9fc0a8_.cpython-311.pyc
+│       │   └── bf194dabcad1_.cpython-311.pyc
+│       ├── a9241f9fc0a8_.py
+│       └── bf194dabcad1_.py
+├── requirements.txt
+├── setup.cfg
+├── terraform-flask-api
+│   ├── main.tf
+│   ├── provider.tf
+│   ├── terraform.tfstate
+│   └── terraform.tfstate.backup
+└── test
+    ├── __pycache__
+    │   └── conftest.cpython-311-pytest-8.3.5.pyc
+    ├── conftest.py
+    ├── integration
+    │   ├── __pycache__
+    │   │   └── test_factory.cpython-311-pytest-8.3.5.pyc
+    │   ├── models
+    │   │   ├── __pycache__
+    │   │   │   ├── test_item_crud.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_item_integraion.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_store.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_store_integration.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_store_model.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_tag_crud.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_tag_integration.cpython-311-pytest-8.3.5.pyc
+    │   │   │   └── test_user_integraion.cpython-311-pytest-8.3.5.pyc
+    │   │   ├── test_item_integraion.py
+    │   │   ├── test_store_integration.py
+    │   │   ├── test_tag_integration.py
+    │   │   └── test_user_integraion.py
+    │   ├── resources
+    │   │   ├── __pycache__
+    │   │   │   ├── test_item.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_store.cpython-311-pytest-8.3.5.pyc
+    │   │   │   ├── test_tag.cpython-311-pytest-8.3.5.pyc
+    │   │   │   └── test_user.cpython-311-pytest-8.3.5.pyc
+    │   │   ├── test_item.py
+    │   │   ├── test_store.py
+    │   │   ├── test_tag.py
+    │   │   └── test_user.py
+    │   └── test_factory.py
+    └── unit_test
+        ├── models
+        │   ├── __pycache__
+        │   │   ├── test_item.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_item_tag_model.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_item_tag_unit.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_item_unit.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_store_model.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_store_unit.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_tag_model.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_tag_unit.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_user_model.cpython-311-pytest-8.3.5.pyc
+        │   │   └── test_user_unit.cpython-311-pytest-8.3.5.pyc
+        │   ├── test_item_tag_unit.py
+        │   ├── test_item_unit.py
+        │   ├── test_store_unit.py
+        │   ├── test_tag_unit.py
+        │   └── test_user_unit.py
+        ├── schemas
+        │   ├── __pycache__
+        │   │   ├── test_item_schema.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_shared_schema.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_store_schema.cpython-311-pytest-8.3.5.pyc
+        │   │   ├── test_tag_schema.cpython-311-pytest-8.3.5.pyc
+        │   │   └── test_user_schema.cpython-311-pytest-8.3.5.pyc
+        │   ├── test_item_schema.py
+        │   ├── test_shared_schema.py
+        │   ├── test_store_schema.py
+        │   ├── test_tag_schema.py
+        │   └── test_user_schema.py
+        └── services
+```
 
 
 
