@@ -1,6 +1,17 @@
-# simple-flask-smorest-rest-api
+# Simple Flask Smorest REST API
 
-- TODO: configure proper JWT_access token before debloyment
+This is a portfolio project I built to learn and demonstrate real-world skills in backend development, containerization, infrastructure automation, and CI/CD pipelines. It’s a production-like REST API developed with Flask following TDD best practices using pytest, containerized using Docker, deployed on AWS EC2 via Terraform, and integrated with a full CI/CD pipeline using GitHub Actions.
+
+
+
+
+
+
+
+
+
+
+
 - future develpment: refresh jwt tokens
 - furture develpment: consider proper blocklist
 # Config todos/considerations
