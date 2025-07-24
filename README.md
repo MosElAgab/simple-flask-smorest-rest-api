@@ -1,4 +1,8 @@
 # Simple Flask Smorest REST API
+![CI](https://github.com/MosElAgab/simple-flask-smorest-rest-api/actions/workflows/CI.yml/badge.svg)
+![License](https://img.shields.io/github/license/MosElAgab/simple-flask-smorest-rest-api)
+![Python](https://img.shields.io/badge/python-3.11-blue.svg)
+![Last Commit](https://img.shields.io/github/last-commit/MosElAgab/simple-flask-smorest-rest-api)
 
 This is a portfolio project I built to learn and demonstrate real-world skills in backend development, containerization, infrastructure automation, and CI/CD pipelines. It’s a production-like REST API developed with Flask, built with test-driven development (TDD) using Pytest, containerized using Docker, deployed on AWS EC2 via Terraform, and integrated with a full CI/CD pipeline using GitHub Actions.
 
@@ -8,7 +12,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 - CRUD API for Items, Stores, and Tags
 - JWT Authentication (with admin role support and token revocation)
 - User registration and login
-- Integrated unit and integration testing (with pytest)
+- Unit and integration testing with Pytest
 - Docker & Docker Compose
 - PostgreSQL container with persistent volumes
 - Deployed on AWS EC2 using Terraform (infrastructure as code)
@@ -25,7 +29,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 | **Authentication**         | JWT (via flask-jwt-extended)              |
 | **Database**               | PostgreSQL 16.1 (Dockerized)              |
 | **ORM**                    | SQLAlchemy                                |
-| **Testing**                | Pytest, Coverage.py                       |
+| **Testing Frameworks**     | Pytest, Coverage.py                       |
 | **Containerization**       | Docker, Docker Compose                    |
 | **CI/CD**                  | GitHub Actions                            |
 | **Infrastructure as Code** | Terraform                                 |
@@ -62,7 +66,9 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 ├── Makefile                # Useful CLI commands
 ├── requirements.txt        # Python dependencies
 ├── README.md               # Project documentation
+├── .env.example            # For evironment varibales
 └── setup.cfg               # Linting and formatting config
+
 
 ```
 
@@ -90,7 +96,8 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 - Triggered on push/pull request to main
 - Executes:
     - Installs dependencies
-    - runs tests via make test
+    - Sets PYTHONPATH
+    - Runs tests via `make test`
 
 #### CD - CD.yml
 
@@ -110,12 +117,13 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 ---
 
 ##  Application Architecture
-
+<!-- Mention Flask-Smorest as key to routing and response wrapping -->
 The Flask app follows a modular structure that emphasizes separation of concerns and scalability:
 
 * **App Factory Pattern**: The entry point is `create_app()` in `app/__init__.py`, allowing environment-based configuration and testing flexibility.
 * **Blueprints**: Each resource (Store, Item, Tag, User) is organized as a separate blueprint in the `resources/` folder for clean routing.
 * **Models**: All SQLAlchemy models are under `models/`, representing database tables and relationships.
+* **Routes**: All routes follow `RESTful` design patterns and return consistent schema-validated responses.
 * **Schemas**: Marshmallow is used for:
 
   * **Input validation** (e.g. checking required fields, data types)
@@ -139,11 +147,38 @@ The Flask app follows a modular structure that emphasizes separation of concerns
 Tests are written with pytest, organized into unit and integration levels. You can run:
 ```bash
 make test         # Run tests
-make coverage     # Show code coverage
+make coverage     # Run tests and view code coverage
 make lint         # Lint using flake8
 make format       # Auto-format with Black
 ```
 
+### Coverage Report
+```bash
+Name                           Stmts   Miss  Cover
+--------------------------------------------------
+app/__init__.py                   54      1    98%
+app/blocklist.py                   1      0   100%
+app/config.py                     25      0   100%
+app/db.py                          2      0   100%
+app/models/__init__.py             5      0   100%
+app/models/item_model.py          10      0   100%
+app/models/item_tag_model.py       7      0   100%
+app/models/store_model.py          7      0   100%
+app/models/tag_model.py            9      0   100%
+app/models/user_model.py           7      0   100%
+app/resources/item.py             66      5    92%
+app/resources/store.py            58      5    91%
+app/resources/tag.py              78      7    91%
+app/resources/user.py             63      0   100%
+app/schemas/__init__.py            5      0   100%
+app/schemas/item_schema.py        13      0   100%
+app/schemas/shared_schema.py       5      0   100%
+app/schemas/store_schema.py        9      0   100%
+app/schemas/tag_schema.py          7      0   100%
+app/schemas/user_schema.py         5      0   100%
+--------------------------------------------------
+TOTAL                            436     18    96%
+```
 ---
 
 ## Local Development
@@ -166,7 +201,7 @@ cp .env.example .env #check .env.example for further details
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install requirements.txt
+pip install -r requirements.txt
 make run-app
 ```
 
@@ -186,8 +221,8 @@ make terraform-destroy
 ```
 
 ### Note
-- Requires I am user with sutiable permissions configured in the CLI under an AWS profile outlined in provider.tf
-- Key pair must be created locally at `~/.ssh/flask-api-key`, without passphares for use in CD pipeline later. use the follwoing shell command:
+- Requires an IAM user with suitable permissions configured in the AWS CLI under the profile defined in provider.tf
+- Key pair must be created locally at `~/.ssh/flask-api-key`, without passphrase for use in CD pipeline later. use the follwoing shell command:
 ```bash
     ssh-keygen -t rsa -b 4096 -f ~/.ssh/flask-api-key -N ""
 ```
@@ -203,7 +238,8 @@ make terraform-destroy
 | `/store`    | CRUD   | ✅     | Manage stores                   |
 | `/item`     | CRUD   | ✅     | Manage items                    |
 | `/tag`      | CRUD   | ✅     | Manage tags                     |
-| `/user`     | GET    | Admin | Get and delete user (admin only) |
+| `/user`     | GET    | Admin  | Get user (admin only)           |
+| `/user`     | Delete | Admin  | Delete user (admin only)        |
 
 ### Home Route
 The root route returns a deployment success message:
@@ -230,7 +266,7 @@ Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 - Connect domain name
 - Store secrets with AWS SSM or Secrets Manager
 - Add monitoring (AWS Cloud-Watch)
-- JWT tokens refresh
+- Support for JWT refresh tokens
 - Proper Blocklist
 
 ---
@@ -238,7 +274,8 @@ Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 ## License
 This project is open-source and free to use for learning and demonstration.
 
-
+<!-- To add -->
+<!-- Swagger/OpenAPI documentation -->
 
 
 
