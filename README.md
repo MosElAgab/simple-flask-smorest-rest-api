@@ -108,7 +108,31 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 
 ---
 
+##  Application Architecture
 
+The Flask app follows a modular structure that emphasizes separation of concerns and scalability:
+
+* **App Factory Pattern**: The entry point is `create_app()` in `app/__init__.py`, allowing environment-based configuration and testing flexibility.
+* **Blueprints**: Each resource (Store, Item, Tag, User) is organized as a separate blueprint in the `resources/` folder for clean routing.
+* **Models**: All SQLAlchemy models are under `models/`, representing database tables and relationships.
+* **Schemas**: Marshmallow is used for:
+
+  * **Input validation** (e.g. checking required fields, data types)
+  * **Output serialization** (returning clean, structured responses)
+* **Authentication & Authorization**:
+
+  * Uses **JWT** for secure login sessions
+  * Admin-only routes are protected with role-based claims
+  * JWT token revocation via a custom `BLOCKLIST`
+* **Database Migrations**: Managed with Flask-Migrate (Alembic) and applied using `make migrate`.
+* **Error Handling**: Custom JWT error responses for expired/invalid/missing tokens.
+* **Testing**:
+
+  * 180+ tests across unit and integration layers, providing 96% coverage
+  * Test suite runs on each CI push
+  * Tested locally via `make test` or with tools like **Insomnia** for manual API exploration
+
+---
 
 
 
