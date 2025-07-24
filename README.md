@@ -65,9 +65,48 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 
 ```
 
+---
 
+## How It Works
 
+### Infrastructure (Terraform)
 
+- EC2 instance with Amazon Linux 2023
+- SSH key pair and security group (ports 22 and 5007)
+- User data bootstraps the instance with Docker, Git, Make and Docker Compose
+
+### Docker & Compose
+
+- Flask app is built from the Dockerfile using Python 3.11
+- PostgreSQL container includes volume persistence
+- docker-compose runs both services:
+    - App mapped to localhost:5007
+    - Database on localhost:5432
+
+### CI/CD Pipelines
+
+#### CI - CI.yml
+- Triggered on push/pull request to main
+- Executes:
+    - Installs dependencies
+    - runs tests via make test
+
+#### CD - CD.yml
+
+- Triggered on push/pull request to main
+
+- Connects to EC2 via SSH
+    - SSH key and host IP are securely stored in GitHub Secrets
+    - Host IP is pre-approved to bypass confirmation prompt
+
+- Deploys by:
+    - Cloning or pulling the latest repo version
+    - Injecting environment variables from .env via GitHub Secrets
+    - Running:
+        - make up (build and start Docker containers)
+        - make migrate (apply DB migrations)
+
+---
 
 
 
