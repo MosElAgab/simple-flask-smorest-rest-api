@@ -143,6 +143,50 @@ make lint         # Lint using flake8
 make format       # Auto-format with Black
 ```
 
+---
+
+## Local Development
+
+1. Clone the repo:
+
+```bash
+git clone https://github.com/MosElAgab/simple-flask-smorest-rest-api.git
+cd simple-flask-smorest-rest-api
+```
+
+2. Create and fill in .env:
+
+```bash
+cp .env.example .env #check .env.example for further details
+```
+
+3. Run app locally:
+```bash
+make run-app
+```
+
+Or with Docker:
+```bash
+make up
+```
+
+---
+
+## Terraform Commands
+```bash
+# Plan, apply, or destroy infrastructure
+make terraform-plan
+make terraform-apply
+make terraform-destroy
+```
+
+### Note
+- Requires I am user with sutiable permissions configured in the CLI under an AWS profile outlined in provider.tf
+- Key pair must be created locally at `~/.ssh/flask-api-key`, without passphares for use in CD pipeline later. use the follwoing shell command:
+```bash
+    ssh-keygen -t rsa -b 4096 -f ~/.ssh/flask-api-key -N ""
+```
+- EC2 instance is provisioned with Docker, Docker Compose, Git, and Make. The app is deployed using CD pipeline or manual SSH if needed.
 
 
 <!-- ---
