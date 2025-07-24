@@ -134,6 +134,14 @@ The Flask app follows a modular structure that emphasizes separation of concerns
 
 ---
 
+## Testing
+Tests are written with pytest, organized into unit and integration levels. You can run:
+```bash
+make test         # Run tests
+make coverage     # Show code coverage
+make lint         # Lint using flake8
+make format       # Auto-format with Black
+```
 
 
 
