@@ -2,6 +2,7 @@
 
 This is a portfolio project I built to learn and demonstrate real-world skills in backend development, containerization, infrastructure automation, and CI/CD pipelines. It’s a production-like REST API developed with Flask following TDD best practices using pytest, containerized using Docker, deployed on AWS EC2 via Terraform, and integrated with a full CI/CD pipeline using GitHub Actions.
 
+---
 ## Features
 - CRUD API for Items, Stores, and Tags
 - JWT Authentication (with admin role support and token revocation)
@@ -15,8 +16,21 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 
 ---
 
-<!-- # Tech -->
+# Tech Stack
 
+| **Category**               | **Tools / Frameworks**                    |
+| -------------------------- | ----------------------------------------- |
+| **Backend**                | Python, Flask, Flask-Smorest, Marshmallow |
+| **Authentication**         | JWT (via flask-jwt-extended)              |
+| **Database**               | PostgreSQL 16.1 (Dockerized)              |
+| **ORM**                    | SQLAlchemy                                |
+| **Testing**                | Pytest, Coverage.py                       |
+| **Containerization**       | Docker, Docker Compose                    |
+| **CI/CD**                  | GitHub Actions                            |
+| **Infrastructure as Code** | Terraform                                 |
+| **Hosting**                | AWS EC2 (Amazon Linux 2023)               |
+
+---
 
 
 
