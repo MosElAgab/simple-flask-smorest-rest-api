@@ -161,7 +161,11 @@ cp .env.example .env #check .env.example for further details
 ```
 
 3. Run app locally:
+
 ```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install requirements.txt
 make run-app
 ```
 
@@ -209,7 +213,31 @@ Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 
 ---
 
-###
+## Lessons Learned
+- Hands-on experience with GitHub Actions, Terraform, and Docker
+- Deepened understanding of Flask app factory, blueprinting, and auth flows
+- Built confidence in infrastructure automation and CI/CD setup
+- Applied Makefile and shell scripting for developer productivity
+
+---
+
+## Next Improvements
+- Add service layer for business logic separation
+- Add container health checks
+- Set up Nginx reverse proxy for security
+- Use Let's Encrypt for HTTPS
+- Connect domain name
+- Store secrets with AWS SSM or Secrets Manager
+- Add monitoring (AWS Cloud-Watch)
+
+---
+
+## License
+This project is open-source and free to use for learning and demonstration.
+
+
+
+
 
 <!-- ---
 - future develpment: refresh jwt tokens
