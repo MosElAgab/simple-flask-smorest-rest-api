@@ -188,6 +188,28 @@ make terraform-destroy
 ```
 - EC2 instance is provisioned with Docker, Docker Compose, Git, and Make. The app is deployed using CD pipeline or manual SSH if needed.
 
+---
+## API Endpoints
+
+| Endpoint    | Method | Auth  | Description                      |
+| ----------- | ------ | ----- | ---------------------------      |
+| `/register` | POST   | ❌     | Create new user                 |
+| `/login`    | POST   | ❌     | Login and get access token      |
+| `/store`    | CRUD   | ✅     | Manage stores                   |
+| `/item`     | CRUD   | ✅     | Manage items                    |
+| `/tag`      | CRUD   | ✅     | Manage tags                     |
+| `/user`     | GET    | Admin | Get and delete user (admin only) |
+
+### Home Route
+The root route returns a deployment success message:
+```
+GET /
+Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
+```
+
+---
+
+###
 
 <!-- ---
 - future develpment: refresh jwt tokens
