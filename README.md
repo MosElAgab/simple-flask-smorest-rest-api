@@ -6,6 +6,22 @@
 
 This is a portfolio project I built to learn and demonstrate real-world skills in backend development, containerization, infrastructure automation, and CI/CD pipelines. It’s a production-like REST API developed with Flask, following test-driven development (TDD) using Pytest, containerized using Docker, deployed on AWS EC2 via Terraform, and integrated with a full CI/CD pipeline using GitHub Actions.
 
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [How It Works](#how-it-works)
+- [System Architecture](#️-system-architecture)
+- [Application Architecture](#-application-architecture)
+- [Testing](#testing)
+- [Local Development](#local-development)
+- [Terraform Commands](#terraform-commands)
+- [API Endpoints](#api-endpoints)
+- [Swagger UI](#swagger-ui)
+- [Lessons Learned](#lessons-learned)
+- [Next Improvements](#next-improvements)
+- [License](#license)
+
 ---
 
 ## Features
@@ -303,3 +319,5 @@ This project is open-source and free to use for learning and demonstration.
 <!-- To add -->
 <!-- deploying through CD pipeline: setting up secerets -->
 <!-- Next imporovements: infra build and check automation via CD pipeline -->
+<!-- screenshots of Swagger UI -->
+<!-- screenshots of Insomia -->
