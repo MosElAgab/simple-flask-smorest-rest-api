@@ -265,7 +265,11 @@ Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 ### Swagger UI
 When the app is running, interactive API docs are available at:
 ```
-http://IP:port/swagger-ui
+locally:
+http://localhost:5007/swagger-ui
+
+or on EC2 instance:
+http://<EC2_PUBLIC_IP>:5007/swagger-ui
 
 ```
 
@@ -289,7 +293,7 @@ http://IP:port/swagger-ui
 - Store secrets with AWS SSM or Secrets Manager
 - Add monitoring (AWS Cloud-Watch)
 - Support for JWT refresh tokens
-- Presistent Blocklist (e.g., Redis)
+- Persistent Blocklist (e.g., Redis)
 
 ---
 
