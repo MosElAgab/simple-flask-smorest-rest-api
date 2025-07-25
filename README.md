@@ -4,20 +4,20 @@
 ![Python](https://img.shields.io/badge/python-3.11-blue.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/MosElAgab/simple-flask-smorest-rest-api)
 
-This is a portfolio project I built to learn and demonstrate real-world skills in backend development, containerization, infrastructure automation, and CI/CD pipelines. It’s a production-like REST API developed with Flask, built with test-driven development (TDD) using Pytest, containerized using Docker, deployed on AWS EC2 via Terraform, and integrated with a full CI/CD pipeline using GitHub Actions.
+This is a portfolio project I built to learn and demonstrate real-world skills in backend development, containerization, infrastructure automation, and CI/CD pipelines. It’s a production-like REST API developed with Flask, following test-driven development (TDD) using Pytest, containerized using Docker, deployed on AWS EC2 via Terraform, and integrated with a full CI/CD pipeline using GitHub Actions.
 
 ---
 
 ## Features
-- CRUD API for Items, Stores, and Tags
-- JWT Authentication (with admin role support and token revocation)
 - User registration and login
+- JWT Authentication (with admin role support and token revocation)
+- CRUD API for Items, Stores, and Tags
 - Unit and integration testing with Pytest
 - Docker & Docker Compose
 - PostgreSQL container with persistent volumes
 - Deployed on AWS EC2 using Terraform (infrastructure as code)
 - Makefile with targets to automate testing, development and deployment tasks
-- CI/CD pipelines using GitHub Actions for automated testing and deployment
+- CI/CD pipelines via GitHub Actions for automated testing and deployment
 
 ---
 
@@ -66,7 +66,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 ├── Makefile                # Useful CLI commands
 ├── requirements.txt        # Python dependencies
 ├── README.md               # Project documentation
-├── .env.example            # For evironment varibales
+├── .env.example            # For environment varibales
 └── setup.cfg               # Linting and formatting config
 
 
@@ -86,7 +86,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 
 - Flask app is built from the Dockerfile using Python 3.11
 - PostgreSQL container includes volume persistence
-- docker-compose runs both services:
+- `docker-compose` runs both services:
     - App mapped to localhost:5007
     - Database on localhost:5432
 
@@ -111,8 +111,8 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
     - Cloning or pulling the latest repo version
     - Injecting environment variables from .env via GitHub Secrets
     - Running:
-        - make up (build and start Docker containers)
-        - make migrate (apply DB migrations)
+        - `make up` (build and start Docker containers)
+        - `make migrate` (apply DB migrations)
 
 ---
 ## 🗺️ System Architecture
@@ -127,25 +127,33 @@ This diagram illustrates how the Flask REST API is containerized with Docker and
 The Flask app follows a modular structure that emphasizes separation of concerns and scalability:
 
 * **App Factory Pattern**: The entry point is `create_app()` in `app/__init__.py`, allowing environment-based configuration and testing flexibility.
+
 * **Blueprints**: Each resource (Store, Item, Tag, User) is organized as a separate blueprint in the `resources/` folder for clean routing.
+
 * **Models**: All SQLAlchemy models are under `models/`, representing database tables and relationships.
 * **Routes**: All routes follow `RESTful` design patterns and return consistent schema-validated responses.
+
+* **Routing and API Documentation**: Powered by **Flask-Smorest**, which groups routes via Blueprints, integrates schema validation, and automatically generates interactive **OpenAPI 3.0.3** docs served at `/swagger-ui`.
+
+
 * **Schemas**: Marshmallow is used for:
 
   * **Input validation** (e.g. checking required fields, data types)
   * **Output serialization** (returning clean, structured responses)
+
 * **Authentication & Authorization**:
 
   * Uses **JWT** for secure login sessions
   * Admin-only routes are protected with role-based claims
   * JWT token revocation via a custom `BLOCKLIST`
+
 * **Database Migrations**: Managed with Flask-Migrate (Alembic) and applied using `make migrate`.
 * **Error Handling**: Custom JWT error responses for expired/invalid/missing tokens.
 * **Testing**:
 
   * 180+ tests across unit and integration layers, providing 96% coverage
   * Test suite runs on each CI push
-  * Tested locally via `make test` or with tools like **Insomnia** for manual API exploration
+  * Tested locally via `make test` and **Insomnia** for manual API exploration
 
 ---
 
@@ -228,7 +236,7 @@ make terraform-destroy
 
 ### Note
 - Requires an IAM user with suitable permissions configured in the AWS CLI under the profile defined in provider.tf
-- Key pair must be created locally at `~/.ssh/flask-api-key`, without passphrase for use in CD pipeline later. use the follwoing shell command:
+- Key pair must be created locally at `~/.ssh/flask-api-key`, without passphrase for use in CD pipeline later. use the following shell command:
 ```bash
     ssh-keygen -t rsa -b 4096 -f ~/.ssh/flask-api-key -N ""
 ```
@@ -254,6 +262,13 @@ GET /
 Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 ```
 
+### Swagger UI
+When the app is running, interactive API docs are available at:
+```
+http://IP:port/swagger-ui
+
+```
+
 ---
 
 ## Lessons Learned
@@ -261,6 +276,7 @@ Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 - Deepened understanding of Flask app factory, blueprinting, and auth flows
 - Built confidence in infrastructure automation and CI/CD setup
 - Applied Makefile and shell scripting for developer productivity
+- Learned to debug and automate coupled concerns like database migrations, dependency setup, and environment variable injection across dev and prod environments.
 
 ---
 
@@ -273,7 +289,7 @@ Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 - Store secrets with AWS SSM or Secrets Manager
 - Add monitoring (AWS Cloud-Watch)
 - Support for JWT refresh tokens
-- Proper Blocklist
+- Presistent Blocklist (e.g., Redis)
 
 ---
 
@@ -281,13 +297,5 @@ Hello to Simple-Flask-Smorest-REST-API, I was deployed with CD!
 This project is open-source and free to use for learning and demonstration.
 
 <!-- To add -->
-<!-- Swagger/OpenAPI documentation -->
 <!-- deploying through CD pipeline: setting up secerets -->
-
-
-
-<!-- ---
-
-![CI](https://github.com/MosElAgab/simple-flask-smorest-rest-api/actions/workflows/ci.yml/badge.svg)
-
-![CI](https://github.com/MosElAgab/simple-flask-smorest-rest-api/.github/workflows/CI.yml/badge.svg) -->
+<!-- Next imporovements: infra build and check automation via CD pipeline -->
