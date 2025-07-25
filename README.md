@@ -289,6 +289,11 @@ http://<EC2_PUBLIC_IP>:5007/swagger-ui
 
 ```
 
+#### Swagger Preview
+
+![swagger UI screenshot](images/swagger-preview-1.png)
+![swagger UI screenshot](images/swagger-preview-2.png)
+
 ---
 
 ## Lessons Learned
