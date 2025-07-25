@@ -11,7 +11,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [How It Works](#how-it-works)
-- [System Architecture](#️-system-architecture)
+- [System Architecture](#system-architecture)
 - [Application Architecture](#-application-architecture)
 - [Testing](#testing)
 - [Local Development](#local-development)
@@ -131,7 +131,8 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
         - `make migrate` (apply DB migrations)
 
 ---
-## 🗺️ System Architecture
+## System Architecture
+
 ![AWS Deployment Diagram](images/aws-architecture.png)
 
 This diagram illustrates how the Flask REST API is containerized with Docker and deployed on an AWS EC2 instance using Terraform. CI/CD pipelines via GitHub Actions automate testing and deployment.
@@ -269,7 +270,7 @@ make terraform-destroy
 | `/item`     | CRUD   | ✅     | Manage items                    |
 | `/tag`      | CRUD   | ✅     | Manage tags                     |
 | `/user`     | GET    | Admin  | Get user (admin only)           |
-| `/user`     | Delete | Admin  | Delete user (admin only)        |
+| `/user`     | DELETE | Admin  | Delete user (admin only)        |
 
 ### Home Route
 The root route returns a deployment success message:
