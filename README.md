@@ -20,6 +20,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 - [Swagger UI](#swagger-ui)
 - [Lessons Learned](#lessons-learned)
 - [Next Improvements](#next-improvements)
+- [API Simulator](#api-simulator)
 - [License](#license)
 
 ---
@@ -319,6 +320,13 @@ http://<EC2_PUBLIC_IP>:5007/swagger-ui
 
 ---
 
+## API Simulator
+
+To generate realistic test data and interact with this API, check out the companion simulator project:
+
+**[simulator_simple_flask_smorest_rest_api](https://github.com/MosElAgab/simulator_simple_flask_sromest_rest_api)**
+
+---
 ## License
 This project is open-source and free to use for learning and demonstration.
 
