@@ -115,6 +115,12 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
         - make migrate (apply DB migrations)
 
 ---
+## 🗺️ System Architecture
+![AWS Deployment Diagram](images/aws-architecture.png)
+
+This diagram illustrates how the Flask REST API is containerized with Docker and deployed on an AWS EC2 instance using Terraform. CI/CD pipelines via GitHub Actions automate testing and deployment.
+
+---
 
 ##  Application Architecture
 <!-- Mention Flask-Smorest as key to routing and response wrapping -->
@@ -276,6 +282,7 @@ This project is open-source and free to use for learning and demonstration.
 
 <!-- To add -->
 <!-- Swagger/OpenAPI documentation -->
+<!-- deploying through CD pipeline: setting up secerets -->
 
 
 
