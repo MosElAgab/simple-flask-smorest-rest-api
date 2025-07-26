@@ -12,7 +12,7 @@ This is a portfolio project I built to learn and demonstrate real-world skills i
 - [Project Structure](#project-structure)
 - [How It Works](#how-it-works)
 - [System Architecture](#system-architecture)
-- [Application Architecture](#-application-architecture)
+- [Application Architecture](#application-architecture)
 - [Testing](#testing)
 - [Local Development](#local-development)
 - [Terraform Commands](#terraform-commands)
