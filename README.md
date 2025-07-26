@@ -1,8 +1,14 @@
 # Simple Flask Smorest REST API
 ![CI](https://github.com/MosElAgab/simple-flask-smorest-rest-api/actions/workflows/CI.yml/badge.svg)
 ![License](https://img.shields.io/github/license/MosElAgab/simple-flask-smorest-rest-api)
-![Python](https://img.shields.io/badge/python-3.11-blue.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/MosElAgab/simple-flask-smorest-rest-api)
+![Python](https://img.shields.io/badge/python-3.11-blue.svg)
+![Flask](https://img.shields.io/badge/Flask-API-black?logo=flask)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)
+![GitHub Actions](https://img.shields.io/badge/CI/CD-GitHub_Actions-blue?logo=githubactions)
+![Terraform](https://img.shields.io/badge/IaC-Terraform-623CE4?logo=terraform)
+![AWS](https://img.shields.io/badge/AWS-EC2-orange?logo=amazonaws)
+
 
 This is a portfolio project I built to learn and demonstrate real-world skills in backend development, containerization, infrastructure automation, and CI/CD pipelines. It’s a production-like REST API developed with Flask, following test-driven development (TDD) using Pytest, containerized using Docker, deployed on AWS EC2 via Terraform, and integrated with a full CI/CD pipeline using GitHub Actions.
 
@@ -367,3 +373,5 @@ This project is open-source and free to use for learning and demonstration.
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="Linux" width="40" height="40"/>
   </a>
 </p>
+
+---
